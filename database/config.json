@@ -1,0 +1,23 @@
+{
+	"development": {
+		"username": "dutychain_middle",
+		"password": "Fa4Yx7it5NGFDSCG",
+		"database": "dutychain_middle",
+		"host": "127.0.0.1",
+		"dialect": "mysql"
+	},
+	"test": {
+		"username": "dutychain_middle",
+		"password": "Fa4Yx7it5NGFDSCG",
+		"database": "dutychain_middle",
+		"host": "127.0.0.1",
+		"dialect": "mysql"
+	},
+	"production": {
+		"username": "dutychain_middle",
+		"password": "Fa4Yx7it5NGFDSCG",
+		"database": "dutychain_middle",
+		"host": "127.0.0.1",
+		"dialect": "mysql"
+	}
+}

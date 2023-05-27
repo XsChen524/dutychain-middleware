@@ -1,0 +1,19 @@
+{
+	"extends": "eslint-config-egg",
+	"root": true,
+	"plugins": ["sort-imports-es6-autofix"],
+	"rules": {
+		"quotes": "off",
+		"indent": "off",
+		"no-unused-vars": "warn",
+		"arrow-parens": "off",
+		"sort-imports-es6-autofix/sort-imports-es6": [
+			"warn",
+			{
+				"ignoreCase": false,
+				"ignoreMemberSort": false,
+				"memberSyntaxSortOrder": ["all", "single", "multiple", "none"]
+			}
+		]
+	}
+}
