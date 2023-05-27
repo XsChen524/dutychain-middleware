@@ -42,7 +42,7 @@ module.exports = {
 				allowNull: false,
 				comment: "id to whom responsibility transferred",
 			},
-			createAt: {
+			createdAt: {
 				type: Sequelize.DataTypes.DATE,
 				allowNull: false,
 			},
