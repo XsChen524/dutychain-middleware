@@ -23,6 +23,18 @@ module.exports = (appInfo) => {
 		host: "127.0.0.1",
 		port: 3306,
 		database: "dutychain_middle",
+		username: "dutychain_middle",
+		password: "Fa4Yx7it5NGFDSCG",
+		timezone: "+08:00",
+		define: {
+			timestamps: false, // Auto-update createdAt, updatedAt
+		},
+	};
+
+	config.security = {
+		csrf: {
+			enable: false, // csrf turned off!!!
+		},
 	};
 
 	// add your user config here
