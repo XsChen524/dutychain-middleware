@@ -19,12 +19,12 @@ module.exports = {
 				{
 					name: "Midland",
 					description: "Midland Holdings Limited",
-					role: "Agency",
+					role: "agency",
 				},
 				{
 					name: "BDO",
 					description: "BDO China",
-					role: "Auditor",
+					role: "auditor",
 				},
 			],
 			{}
