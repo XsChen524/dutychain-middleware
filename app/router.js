@@ -10,4 +10,8 @@ module.exports = (app) => {
 	// Vendors
 	router.get("/vendor", controller.vendor.getAllVendors);
 	router.post("/vendor", controller.vendor.createVendor);
+
+	// Projects
+	router.get("/project", controller.project.getAllProjects);
+	router.post("/project", controller.project.createProject);
 };
