@@ -44,21 +44,7 @@ module.exports = {
 		);
 	},
 
-	async down(queryInterface, Sequelize) {
-		const Op = Sequelize.Op;
-		return queryInterface.bulkDelete(
-			"txns",
-			{
-				id: {
-					[Op.eq]:
-						"0x0000000000000000000000000000000000000000000000000000000000000001",
-					[Op.eq]:
-						"0x0000000000000000000000000000000000000000000000000000000000000002",
-					[Op.eq]:
-						"0x0000000000000000000000000000000000000000000000000000000000000003",
-				},
-			},
-			{}
-		);
+	async down(queryInterface) {
+		return queryInterface.bulkDelete("txns", null, {});
 	},
 };

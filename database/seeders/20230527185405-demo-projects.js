@@ -23,17 +23,7 @@ module.exports = {
 		);
 	},
 
-	async down(queryInterface, Sequelize) {
-		const Op = Sequelize.Op;
-		return queryInterface.bulkDelete(
-			"projects",
-			{
-				name: {
-					[Op.eq]: "Pokfulam Garden",
-					[Op.eq]: "New City",
-				},
-			},
-			{}
-		);
+	async down(queryInterface) {
+		return queryInterface.bulkDelete("projects", null, {});
 	},
 };

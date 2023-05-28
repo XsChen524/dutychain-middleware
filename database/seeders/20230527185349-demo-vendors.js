@@ -31,19 +31,7 @@ module.exports = {
 		);
 	},
 
-	async down(queryInterface, Sequelize) {
-		const Op = Sequelize.Op;
-		return queryInterface.bulkDelete(
-			"vendors",
-			{
-				name: {
-					[Op.eq]: "CK",
-					[Op.eq]: "New World",
-					[Op.eq]: "Midland",
-					[Op.eq]: "BDO",
-				},
-			},
-			{}
-		);
+	async down(queryInterface) {
+		return queryInterface.bulkDelete("vendors", null, {});
 	},
 };

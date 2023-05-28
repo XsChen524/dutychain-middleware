@@ -28,17 +28,7 @@ module.exports = {
 		);
 	},
 
-	async down(queryInterface, Sequelize) {
-		const Op = Sequelize.Op;
-		return queryInterface.bulkDelete(
-			"meta",
-			{
-				id: {
-					[Op.eq]: 1,
-					[Op.eq]: 2,
-				},
-			},
-			{}
-		);
+	async down(queryInterface) {
+		return queryInterface.bulkDelete("meta", null, {});
 	},
 };
