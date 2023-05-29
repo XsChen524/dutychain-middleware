@@ -18,4 +18,8 @@ module.exports = (app) => {
 	// Responsibilities
 	router.get("/meta", controller.meta.getAllResponsibilities);
 	router.post("/meta", controller.meta.createResponsibility);
+
+	// Transactions
+	router.get("/txn", controller.txn.getAllTxns);
+	router.post("/txn", controller.txn.createTxn);
 };
