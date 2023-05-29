@@ -11,4 +11,13 @@ function stringToNumberArray(str) {
 	return returnArray;
 }
 
-module.exports = { stringToNumberArray };
+function strToStrArray(str) {
+	const tmpArray = str.split(",");
+	for (let i = 0; i < tmpArray.length; i += 1) {
+		tmpArray[i] = tmpArray[i].replace("[", "");
+		tmpArray[i] = tmpArray[i].replace("]", "");
+	}
+	return tmpArray;
+}
+
+module.exports = { stringToNumberArray, strToStrArray };
