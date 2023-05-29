@@ -14,4 +14,8 @@ module.exports = (app) => {
 	// Projects
 	router.get("/project", controller.project.getAllProjects);
 	router.post("/project", controller.project.createProject);
+
+	// Responsibilities
+	router.get("/meta", controller.meta.getAllResponsibilities);
+	router.post("/meta", controller.meta.createResponsibility);
 };
