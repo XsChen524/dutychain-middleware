@@ -5,13 +5,13 @@ const { strToStrArray } = require("../utils/utils");
 
 class MetaService extends Service {
 	async create(body) {
-		const { name, description, projectId, previous } = body;
+		const { name, description, projectId, previousTxns } = body;
 		try {
 			const meta = await this.ctx.model.Meta.create({
 				name,
 				description,
 				projectId: Number(projectId),
-				previous,
+				previousTxns,
 			});
 			return meta;
 		} catch (error) {
@@ -28,8 +28,7 @@ class MetaService extends Service {
 
 		// Parse the previous to string[]
 		for (let i = 0; i < metas.length; i += 1) {
-			console.log(metas[i].previous);
-			metas[i].previous = strToStrArray(metas[i].previous);
+			metas[i].previousTxns = strToStrArray(metas[i].previousTxns);
 		}
 		return metas;
 	}

@@ -23,7 +23,7 @@ module.exports = (app) => {
 			type: INTEGER,
 			allowNull: false,
 		},
-		previous: {
+		previousTxns: {
 			// Need to convert to type number[] in service
 			type: TEXT,
 			allowNull: false,

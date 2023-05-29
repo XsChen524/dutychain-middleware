@@ -27,7 +27,7 @@ module.exports = {
 				allowNull: false,
 				comment: "id of project the responsibility belongs to",
 			},
-			previous: {
+			previousTxns: {
 				// Need to convert to type number[] in service
 				type: Sequelize.DataTypes.TEXT,
 				allowNull: false,

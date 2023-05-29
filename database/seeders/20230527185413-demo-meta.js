@@ -12,7 +12,7 @@ module.exports = {
 					description:
 						"Delivered estate ready for selling on Midland",
 					projectId: 1,
-					previous:
+					previousTxns:
 						"[0x0000000000000000000000000000000000000000000000000000000000000001]",
 				},
 				{
@@ -20,7 +20,7 @@ module.exports = {
 					name: "Estate project auditing",
 					description: "Auditing by independent third-party BDO",
 					projectId: 2,
-					previous:
+					previousTxns:
 						"[0x0000000000000000000000000000000000000000000000000000000000000002,0x0000000000000000000000000000000000000000000000000000000000000003]",
 				},
 			],
