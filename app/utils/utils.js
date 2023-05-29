@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 function stringToNumberArray(str) {
 	const tmpArray = str.split(",");
 	for (let i = 0; i < tmpArray.length; i += 1) {
@@ -20,4 +22,15 @@ function strToStrArray(str) {
 	return tmpArray;
 }
 
-module.exports = { stringToNumberArray, strToStrArray };
+function randomString(len) {
+	if (!Number.isFinite(len)) {
+		throw new TypeError("Expected a finite number");
+	}
+
+	return crypto
+		.randomBytes(Math.ceil(len / 2))
+		.toString("hex")
+		.slice(0, len);
+}
+
+module.exports = { stringToNumberArray, strToStrArray, randomString };
