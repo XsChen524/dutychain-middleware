@@ -8,11 +8,17 @@ class VendorController extends Controller {
 		const vendor = await ctx.service.vendor.create(ctx.request.body);
 		if (!vendor) {
 			ctx.status = 406;
-			ctx.body = undefined;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
 			return;
 		}
 		ctx.status = 201;
-		ctx.body = vendor;
+		ctx.body = {
+			success: true,
+			data: vendor,
+		};
 		return;
 	}
 
@@ -21,10 +27,17 @@ class VendorController extends Controller {
 		const vendors = await ctx.service.vendor.findAll();
 		if (vendors) {
 			ctx.status = 200;
+			ctx.body = {
+				success: true,
+				data: vendors,
+			};
 		} else {
 			ctx.status = 400;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
 		}
-		ctx.body = vendors;
 		return;
 	}
 }
