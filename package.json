@@ -20,6 +20,7 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "egg": "^3",
+    "egg-cors": "^2.2.3",
     "egg-scripts": "^2",
     "egg-sequelize": "^6.0.0",
     "moment": "^2.29.4",
