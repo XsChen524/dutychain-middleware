@@ -209,7 +209,7 @@ async function readAsset(ID){
 			const contract = network.getContract(chaincodeName);
 			try{
 				console.log('\n--> Evaluate Transaction: ReadAsset, function returns information about an asset with ID(asset7)');
-				let result = await contract.evaluateTransaction('ReadAsset', 'asset7');
+				let result = await contract.evaluateTransaction('ReadAsset', ID);
 				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 				return result;
 				
@@ -263,7 +263,7 @@ async function readRange(left='',right=''){
 		
 	} catch(error){
 		console.error(`******** FAILED to run the application: ${error}`);
-		return "error";
+		return `${error}`;
 	}
 }
 

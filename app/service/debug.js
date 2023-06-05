@@ -14,31 +14,13 @@ class DebugService extends Service {
 		 * @param {String} vendorId Get string from request body,
 		 * need stringfying at frontend.
 		 */
-		const { type, operatorId, description, fromVendor, toVendor } = body;
+		const { ID, Color, Size, Owner, AppraisedValue } = body;
 		try {
-			// const txn = await this.ctx.model.Txn.create({
-			// 	id:
-			// 		"0x000000000000000000000000000000000000000000000000" +
-			// 		randomString(16),
-			// 	blockId: 1,
-			// 	type,
-			// 	operatorId: Number(operatorId),
-			// 	description,
-			// 	fromVendor: Number(fromVendor),
-			// 	toVendor: Number(toVendor),
-			// 	createdAt: Sequelize.literal("CURRENT_TIMESTAMP"),
-			// 	committedAt: Sequelize.literal("CURRENT_TIMESTAMP"),
-			// });
-
-            const inputBody = {
-                ID: "4",
-                Color: "Blue",
-                Size: 5,
-                Owner: 'Tom',
-                AppraisedValue: 300
-            };
-
-            const res = createAsset(inputBody.ID,inputBody.Color,inputBody.Size,inputBody.Owner,inputBody.AppraisedValue);            
+            if(ID === undefined){
+                console.log("ID cannot be empty");
+                throw new Error("ID cannot be empty");
+            }
+            const res = createAsset(ID,Color,Size,Owner,AppraisedValue);            
 			return res;
 
 		} catch (error) {
@@ -60,11 +42,7 @@ class DebugService extends Service {
     async read(body) {
         try{
 
-            const inputBody = {
-                ID:"asset7"
-            };
-
-            const res = readAsset(inputBody.ID);
+            const res = readAsset(body.ID);
             return res;
         } catch(error){
             console.error(error);
