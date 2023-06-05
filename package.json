@@ -23,6 +23,8 @@
     "egg-cors": "^2.2.3",
     "egg-scripts": "^2",
     "egg-sequelize": "^6.0.0",
+    "fabric-ca-client": "^2.2.18",
+    "fabric-network": "^2.2.18",
     "moment": "^2.29.4",
     "mysql2": "^3.3.2"
   },
