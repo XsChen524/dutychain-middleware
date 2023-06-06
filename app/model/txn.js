@@ -40,10 +40,12 @@ module.exports = (app) => {
 		},
 		createdAt: {
 			type: Date,
+			default: Date.now,
 			required: true,
 		},
 		committedAt: {
 			type: Date,
+			default: Date.now,
 			required: true,
 		},
 	});

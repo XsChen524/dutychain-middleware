@@ -7,12 +7,12 @@ class MetaService extends Service {
 	async create(body) {
 		const { name, description, projectId, previousTxns } = body;
 		try {
-			const meta = await this.ctx.model.Meta.create({
+			const meta = await this.ctx.model.Meta.insertMany([{
 				name,
 				description,
 				projectId: Number(projectId),
 				previousTxns,
-			});
+			}]);
 			return meta;
 		} catch (error) {
 			console.error(error);
@@ -21,7 +21,7 @@ class MetaService extends Service {
 	}
 
 	async findAll() {
-		const metas = await this.ctx.model.Meta.findAll();
+		const metas = await this.ctx.model.Meta.find();
 		if (!metas) {
 			return undefined;
 		}

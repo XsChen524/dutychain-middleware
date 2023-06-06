@@ -1,7 +1,6 @@
 "use strict";
 
 const Service = require("egg").Service;
-const Sequelize = require("sequelize");
 const { randomString } = require("../utils/utils");
 
 class TxnService extends Service {
@@ -22,8 +21,8 @@ class TxnService extends Service {
 				description,
 				fromVendor: Number(fromVendor),
 				toVendor: Number(toVendor),
-				createdAt: Sequelize.literal("CURRENT_TIMESTAMP"),
-				committedAt: Sequelize.literal("CURRENT_TIMESTAMP"),
+				createdAt: Date.now(),
+				committedAt: Date.now(),
 			}]);
 			return txn;
 		} catch (error) {

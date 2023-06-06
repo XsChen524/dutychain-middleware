@@ -2,7 +2,6 @@
 
 module.exports = (app) => {
 	const mongoose = app.mongoose;
-
 	const MetaSchema = new mongoose.Schema({
 		id: {
 			unique: true,
