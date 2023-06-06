@@ -6,12 +6,12 @@ class VendorService extends Service {
 	async create(body) {
 		const { id, name, description, role } = body;
 		try {
-			const vendor = await this.ctx.model.Vendor.create({
+			const vendor = await this.ctx.model.Vendor.insertMany([{
 				id: Number(id),
 				name,
 				description,
 				role,
-			});
+			}]);
 			return vendor;
 		} catch (error) {
 			console.error(error);
@@ -20,7 +20,7 @@ class VendorService extends Service {
 	}
 
 	async findAll() {
-		const vendors = await this.ctx.model.Vendor.findAll();
+		const vendors = await this.ctx.model.Vendor.find();
 		if (!vendors) {
 			return undefined;
 		}

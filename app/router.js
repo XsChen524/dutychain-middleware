@@ -22,4 +22,8 @@ module.exports = (app) => {
 	// Transactions
 	router.get("/txn", controller.txn.getAllTxns);
 	router.post("/txn", controller.txn.createTxn);
+
+	// Documents
+	router.get("/document", controller.doc.getDocList);
+	router.post("/document", controller.doc.uploadDoc);
 };

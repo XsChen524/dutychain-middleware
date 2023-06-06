@@ -21,10 +21,9 @@
     "crypto": "^1.0.1",
     "egg": "^3",
     "egg-cors": "^2.2.3",
+    "egg-mongoose": "^3.3.1",
     "egg-scripts": "^2",
-    "egg-sequelize": "^6.0.0",
-    "moment": "^2.29.4",
-    "mysql2": "^3.3.2"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "egg-bin": "^5",
@@ -32,8 +31,7 @@
     "egg-mock": "^5",
     "eslint": "^8",
     "eslint-config-egg": "^12",
-    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
-    "sequelize-cli": "^6.6.0"
+    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0"
   },
   "engines": {
     "node": ">=16.0.0"

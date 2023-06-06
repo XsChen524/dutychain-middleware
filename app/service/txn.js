@@ -12,7 +12,7 @@ class TxnService extends Service {
 		 */
 		const { type, operatorId, description, fromVendor, toVendor } = body;
 		try {
-			const txn = await this.ctx.model.Txn.create({
+			const txn = await this.ctx.model.Txn.insertMany([{
 				id:
 					"0x000000000000000000000000000000000000000000000000" +
 					randomString(16),
@@ -24,7 +24,7 @@ class TxnService extends Service {
 				toVendor: Number(toVendor),
 				createdAt: Sequelize.literal("CURRENT_TIMESTAMP"),
 				committedAt: Sequelize.literal("CURRENT_TIMESTAMP"),
-			});
+			}]);
 			return txn;
 		} catch (error) {
 			console.error(error);
@@ -33,7 +33,7 @@ class TxnService extends Service {
 	}
 
 	async findAll() {
-		const txns = await this.ctx.model.Txn.findAll();
+		const txns = await this.ctx.model.Txn.find();
 		if (!txns) {
 			return undefined;
 		}

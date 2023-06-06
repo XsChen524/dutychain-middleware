@@ -11,11 +11,11 @@ class ProjectService extends Service {
 		 */
 		const { name, description, vendorId } = body;
 		try {
-			const project = await this.ctx.model.Project.create({
+			const project = await this.ctx.model.Project.insertMany([{
 				name,
 				description,
 				vendorId,
-			});
+			}]);
 			return project;
 		} catch (error) {
 			console.error(error);
@@ -24,7 +24,7 @@ class ProjectService extends Service {
 	}
 
 	async findAll() {
-		const projects = await this.ctx.model.Project.findAll();
+		const projects = await this.ctx.model.Project.find();
 		if (!projects) {
 			return undefined;
 		}
