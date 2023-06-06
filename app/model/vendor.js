@@ -12,20 +12,20 @@ module.exports = (app) => {
 		name: {
 			type: String,
 			maxlength: 100,
-			minlength: 100,
+			minlength: 0,
 			required: true,
 		},
 		description: {
 			type: String,
 			maxlength: 200,
-			minlength: 200,
+			minlength: 0,
 			required: true,
 			default: null,
 		},
 		role: {
 			type: String,
 			maxlength: 100,
-			minlength: 100,
+			minlength: 0,
 			required: true,
 			default: "contractor",
 		},

@@ -10,8 +10,11 @@ class ProjectService extends Service {
 		 * need stringfying at frontend.
 		 */
 		const { name, description, vendorId } = body;
+		let previousId = (await this.ctx.model.Meta.find().sort({ id: -1 }))[0];
+		previousId = previousId === undefined ? 0 : previousId.id;
 		try {
 			const project = await this.ctx.model.Project.insertMany([{
+				id: previousId + 1,
 				name,
 				description,
 				vendorId,

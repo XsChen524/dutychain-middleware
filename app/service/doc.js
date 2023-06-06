@@ -10,9 +10,6 @@ class DocService extends Service {
 		 * need stringfying at frontend.
 		 */
 		const { title, data, vendorId } = body;
-		console.log(title);
-		console.log(data);
-		console.log(Number(vendorId));
 		try {
 			const txn = await this.ctx.model.Doc.insertMany([{
 				id:
