@@ -140,7 +140,7 @@ async function init() {
 
 }
 
-async function createAsset(ID, Color, Size, Owner, AppraisedValue){
+async function createAsset(id, title, data, vendorId){
 	try{
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
@@ -159,7 +159,7 @@ async function createAsset(ID, Color, Size, Owner, AppraisedValue){
 			const contract = network.getContract(chaincodeName);
 			try{
 				console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID(asset7), color(yellow), size(5), owner(Tom), and appraisedValue(1300) arguments');
-				let result = await contract.submitTransaction('CreateAsset', ID, Color, Size, Owner, AppraisedValue);
+				let result = await contract.submitTransaction('CreateAsset', id, title, data, vendorId);
 				console.log('*** Result: committed');
 
 				// console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID, color, owner, size, and appraisedValue arguments');
@@ -189,7 +189,7 @@ async function createAsset(ID, Color, Size, Owner, AppraisedValue){
 
 
 
-async function readAsset(ID){
+async function readAsset(id){
 	try{
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
@@ -209,7 +209,7 @@ async function readAsset(ID){
 			const contract = network.getContract(chaincodeName);
 			try{
 				console.log('\n--> Evaluate Transaction: ReadAsset, function returns information about an asset with ID(asset7)');
-				let result = await contract.evaluateTransaction('ReadAsset', ID);
+				let result = await contract.evaluateTransaction('ReadAsset', id);
 				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 				return result;
 				
@@ -271,7 +271,7 @@ async function readRange(left='',right=''){
 
 
 
-async function transfer(ID, newOwner){
+async function transfer(id, newVendorId){
 	try{
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
@@ -291,7 +291,7 @@ async function transfer(ID, newOwner){
 
 			try{
 				console.log('\n--> Submit Transaction: TransferAsset, transfer asset(asset2) to new owner(Max)');
-				await contract.submitTransaction('TransferAsset', ID, newOwner);
+				await contract.submitTransaction('TransferAsset', id, newVendorId);
 				console.log('*** Result: committed');
 				return true;
 			} catch(error){

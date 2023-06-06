@@ -74,31 +74,30 @@ const {Contract} = require('fabric-contract-api');
 class Chaincode extends Contract {
 
 	// CreateAsset - create a new asset, store into chaincode state
-	async CreateAsset(ctx, assetID, color, size, owner, appraisedValue) {
-		const exists = await this.AssetExists(ctx, assetID);
+	async CreateAsset(ctx, id, title, data, vendorId) {
+		const exists = await this.AssetExists(ctx, id);
 		if (exists) {
-			throw new Error(`The asset ${assetID} already exists`);
+			throw new Error(`The asset ${id} already exists`);
 		}
 
 		// ==== Create asset object and marshal to JSON ====
 		let asset = {
 			docType: 'asset',
-			assetID: assetID,
-			color: color,
-			size: size,
-			owner: owner,
-			appraisedValue: appraisedValue
+			id:id,
+			title: title,
+			data: data,
+			vendorId: vendorId
 		};
 
 
 		// === Save asset to state ===
-		await ctx.stub.putState(assetID, Buffer.from(JSON.stringify(asset)));
-		let indexName = 'color~name';
-		let colorNameIndexKey = await ctx.stub.createCompositeKey(indexName, [asset.color, asset.assetID]);
+		await ctx.stub.putState(id, Buffer.from(JSON.stringify(asset)));
+		let indexName = 'vendorId-index';
+		let vendorIdIndexKey = await ctx.stub.createCompositeKey(indexName, [asset.vendorId, asset.id]);
 
 		//  Save index entry to state. Only the key name is needed, no need to store a duplicate copy of the marble.
 		//  Note - passing a 'nil' value will effectively delete the key from state, therefore we pass null character as value
-		await ctx.stub.putState(colorNameIndexKey, Buffer.from('\u0000'));
+		await ctx.stub.putState(vendorIdIndexKey, Buffer.from('\u0000'));
 		return asset;
 	}
 
@@ -141,9 +140,9 @@ class Chaincode extends Contract {
 		await ctx.stub.deleteState(id); //remove the asset from chaincode state
 
 		// delete the index
-		let indexName = 'color~name';
-		let colorNameIndexKey = ctx.stub.createCompositeKey(indexName, [assetJSON.color, assetJSON.assetID]);
-		if (!colorNameIndexKey) {
+		let indexName = 'vendorId-index';
+		let vendorIdIndexKey = ctx.stub.createCompositeKey(indexName, [assetJSON.vendorId, assetJSON.id]);
+		if (!vendorIdIndexKey) {
 			throw new Error(' Failed to create the createCompositeKey');
 		}
 		//  Delete index entry to state.
@@ -151,11 +150,11 @@ class Chaincode extends Contract {
 	}
 
 	// TransferAsset transfers a asset by setting a new owner name on the asset
-	async TransferAsset(ctx, assetName, newOwner) {
+	async TransferAsset(ctx, id, newVendorId) {
 
-		let assetAsBytes = await ctx.stub.getState(assetName);
+		let assetAsBytes = await ctx.stub.getState(id);
 		if (!assetAsBytes || !assetAsBytes.toString()) {
-			throw new Error(`Asset ${assetName} does not exist`);
+			throw new Error(`Asset ${id} does not exist`);
 		}
 		let assetToTransfer = {};
 		try {
@@ -165,10 +164,10 @@ class Chaincode extends Contract {
 			jsonResp.error = 'Failed to decode JSON of: ' + assetName;
 			throw new Error(jsonResp);
 		}
-		assetToTransfer.owner = newOwner; //change the owner
+		assetToTransfer.vendorId = newVendorId; //change the owner
 
 		let assetJSONasBytes = Buffer.from(JSON.stringify(assetToTransfer));
-		await ctx.stub.putState(assetName, assetJSONasBytes); //rewrite the asset
+		await ctx.stub.putState(id, assetJSONasBytes); //rewrite the asset
 	}
 
 	// GetAssetsByRange performs a range query based on the start and end keys provided.
@@ -194,13 +193,13 @@ class Chaincode extends Contract {
 	// committing peers if the result set has changed between endorsement time and commit time.
 	// Therefore, range queries are a safe option for performing update transactions based on query results.
 	// Example: GetStateByPartialCompositeKey/RangeQuery
-	async TransferAssetByColor(ctx, color, newOwner) {
+	async TransferAssetByColor(ctx, vendorId, newVendorId) {
 		// Query the color~name index by color
 		// This will execute a key range query on all keys starting with 'color'
-		let coloredAssetResultsIterator = await ctx.stub.getStateByPartialCompositeKey('color~name', [color]);
+		let iterator = await ctx.stub.getStateByPartialCompositeKey('vendorId-index', [vendorId]);
 
 		// Iterate through result set and for each asset found, transfer to newOwner
-		let responseRange = await coloredAssetResultsIterator.next();
+		let responseRange = await iterator.next();
 		while (!responseRange.done) {
 			if (!responseRange || !responseRange.value || !responseRange.value.key) {
 				return;
@@ -213,12 +212,12 @@ class Chaincode extends Contract {
 			);
 
 			console.log(objectType);
-			let returnedAssetName = attributes[1];
+			let returnedAssetId = attributes[1];
 
 			// Now call the transfer function for the found asset.
 			// Re-use the same function that is used to transfer individual assets
-			await this.TransferAsset(ctx, returnedAssetName, newOwner);
-			responseRange = await coloredAssetResultsIterator.next();
+			await this.TransferAsset(ctx, returnedAssetId, newVendorId);
+			responseRange = await iterator.next();
 		}
 	}
 
@@ -227,11 +226,11 @@ class Chaincode extends Contract {
 	// and accepting a single query parameter (owner).
 	// Only available on state databases that support rich query (e.g. CouchDB)
 	// Example: Parameterized rich query
-	async QueryAssetsByOwner(ctx, owner) {
+	async QueryAssetsByOwner(ctx, vendorId) {
 		let queryString = {};
 		queryString.selector = {};
 		queryString.selector.docType = 'asset';
-		queryString.selector.owner = owner;
+		queryString.selector.vendorId = vendorId;
 		return await this.GetQueryResultForQueryString(ctx, JSON.stringify(queryString)); //shim.success(queryResults);
 	}
 
@@ -297,18 +296,18 @@ class Chaincode extends Contract {
 	}
 
 	// GetAssetHistory returns the chain of custody for an asset since issuance.
-	async GetAssetHistory(ctx, assetName) {
+	async GetAssetHistory(ctx, assetId) {
 
-		let resultsIterator = await ctx.stub.getHistoryForKey(assetName);
+		let resultsIterator = await ctx.stub.getHistoryForKey(assetId);
 		let results = await this._GetAllResults(resultsIterator, true);
 
 		return JSON.stringify(results);
 	}
 
 	// AssetExists returns true when asset with given ID exists in world state
-	async AssetExists(ctx, assetName) {
+	async AssetExists(ctx, assetId) {
 		// ==== Check if asset already exists ====
-		let assetState = await ctx.stub.getState(assetName);
+		let assetState = await ctx.stub.getState(assetId);
 		return assetState && assetState.length > 0;
 	}
 
@@ -351,61 +350,21 @@ class Chaincode extends Contract {
 
 	// InitLedger creates sample assets in the ledger
 	async InitLedger(ctx) {
-		const assets = [
-			{
-				assetID: 'asset1',
-				color: 'blue',
-				size: 5,
-				owner: 'Tom',
-				appraisedValue: 100
-			},
-			{
-				assetID: 'asset2',
-				color: 'red',
-				size: 5,
-				owner: 'Brad',
-				appraisedValue: 100
-			},
-			{
-				assetID: 'asset3',
-				color: 'green',
-				size: 10,
-				owner: 'Jin Soo',
-				appraisedValue: 200
-			},
-			{
-				assetID: 'asset4',
-				color: 'yellow',
-				size: 10,
-				owner: 'Max',
-				appraisedValue: 200
-			},
-			{
-				assetID: 'asset5',
-				color: 'black',
-				size: 15,
-				owner: 'Adriana',
-				appraisedValue: 250
-			},
-			{
-				assetID: 'asset6',
-				color: 'white',
-				size: 15,
-				owner: 'Michel',
-				appraisedValue: 250
-			},
-		];
+		const asset = {
+			id: '0',
+			title: 'Test Doc 1',
+			data: 'This document is for testing',
+			vendorId: '0',
+		};
 
-		for (const asset of assets) {
-			await this.CreateAsset(
-				ctx,
-				asset.assetID,
-				asset.color,
-				asset.size,
-				asset.owner,
-				asset.appraisedValue
-			);
-		}
+
+		await this.CreateAsset(
+			ctx,
+			asset.id,
+			asset.title,
+			asset.data,
+			asset.vendorId
+		);
 	}
 }
 

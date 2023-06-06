@@ -59,7 +59,7 @@ add an asset to the hyperledger network
 
 Example:
 ```bash
-curl --header "Content-Type: application/json" --request POST --data '{"ID":"4","Color":"Blue","Size":5,"Owner":"Tomoko","AppraisedValue":300}'  localhost:7001/debug/create
+curl --header "Content-Type: application/json" --request POST --data '{"id":"1","title":"Test","data":"Testing","vendorId":"1"}'  localhost:7001/debug/create
 ```
 
 ## read
@@ -67,5 +67,5 @@ Get the asset with the given ID in the network
 
 Example:
 ```bash
-curl --header "Content-Type: application/json" --request POST --data '{"ID":"4"}'  localhost:7001/debug/read
+curl --header "Content-Type: application/json" --request POST --data '{"id":"1"}'  localhost:7001/debug/read
 ```

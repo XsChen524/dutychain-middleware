@@ -14,13 +14,13 @@ class DebugService extends Service {
 		 * @param {String} vendorId Get string from request body,
 		 * need stringfying at frontend.
 		 */
-		const { ID, Color, Size, Owner, AppraisedValue } = body;
+		const { id, title, data, vendorId } = body;
 		try {
-            if(ID === undefined){
+            if(id === undefined){
                 console.log("ID cannot be empty");
                 throw new Error("ID cannot be empty");
             }
-            const res = createAsset(ID,Color,Size,Owner,AppraisedValue);            
+            const res = createAsset(id,title,data,vendorId);            
 			return res;
 
 		} catch (error) {
@@ -42,7 +42,7 @@ class DebugService extends Service {
     async read(body) {
         try{
 
-            const res = readAsset(body.ID);
+            const res = readAsset(body.id);
             return res;
         } catch(error){
             console.error(error);
