@@ -140,7 +140,7 @@ async function init() {
 
 }
 
-async function createAsset(id, title, data, vendorId){
+async function createAsset(id, type, data){
 	try{
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
@@ -158,8 +158,8 @@ async function createAsset(id, title, data, vendorId){
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
 			try{
-				console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID(asset7), color(yellow), size(5), owner(Tom), and appraisedValue(1300) arguments');
-				let result = await contract.submitTransaction('CreateAsset', id, title, data, vendorId);
+				console.log('\n--> Submit Transaction: CreateAsset');
+				let result = await contract.submitTransaction('CreateAsset', id, type, data);
 				console.log('*** Result: committed');
 
 				// console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID, color, owner, size, and appraisedValue arguments');
@@ -208,7 +208,7 @@ async function readAsset(id){
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
 			try{
-				console.log('\n--> Evaluate Transaction: ReadAsset, function returns information about an asset with ID(asset7)');
+				console.log('\n--> Evaluate Transaction: ReadAsset');
 				let result = await contract.evaluateTransaction('ReadAsset', id);
 				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 				return result;
@@ -384,4 +384,5 @@ async function execQueryWithPage(query, pageSize, bookmark){
 	}
 }
 
-module.exports = { init, createAsset, readAsset, readRange, transfer, execQuery, execQueryWithPage };
+module.exports = { init, createAsset, readAsset, readRange,};
+//module.exports = { init, createAsset, readAsset, readRange, transfer, execQuery, execQueryWithPage };
