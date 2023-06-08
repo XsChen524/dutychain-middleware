@@ -41,6 +41,8 @@ rm -rf wallet
 ## init
 initialize the ledger, must call this first before calling any other API
 
+<B>No parameters are required</B>
+
 Example:
 ```bash
 $ curl --header "Content-Type: application/json" --request POST localhost:7001/debug/init
@@ -49,6 +51,8 @@ $ curl --header "Content-Type: application/json" --request POST localhost:7001/d
 
 ## readall
 Get all assets in the network
+
+<B>No paramters are required</B>
 
 Example:
 ```bash
@@ -59,11 +63,19 @@ curl --header "Content-Type: application/json" --request POST localhost:7001/deb
 ## create
 add an asset to the hyperledger network
 
+<B>required to have the following fields in the input JSON:</B>
+* id: string
+* type: string
+* data: JSON
+
 Example:
 <img src="../img/create.png">
 
 ## read
 Get the asset with the given ID in the network
+
+<B>required to have the following fields in the input JSON:</B>
+* id: string
 
 Example:
 ```bash
