@@ -9,7 +9,7 @@
 
 ### deploy smart contract
 ```
-./network.sh deployCC -ccn ledger -ccp ../chaincode/ledger/ -ccl javascript -ccep "OR('Org1MSP.peer','Org2MSP.peer')"
+./network.sh deployCC -ccn ledger -ccp ../chaincode/ledger-doctype/ -ccl javascript -ccep "OR('Org1MSP.peer','Org2MSP.peer')"
 ```
 
 ### view peer log
@@ -45,6 +45,7 @@ Example:
 ```bash
 $ curl --header "Content-Type: application/json" --request POST localhost:7001/debug/init
 ```
+<img src="../img/debug.png">
 
 ## readall
 Get all assets in the network
@@ -53,14 +54,13 @@ Example:
 ```bash
 curl --header "Content-Type: application/json" --request POST localhost:7001/debug/readall
 ```
+<img src="../img/readall.png">
 
 ## create
 add an asset to the hyperledger network
 
 Example:
-```bash
-curl --header "Content-Type: application/json" --request POST --data '{"id":"1","title":"Test","data":"Testing","vendorId":"1"}'  localhost:7001/debug/create
-```
+<img src="../img/create.png">
 
 ## read
 Get the asset with the given ID in the network
@@ -69,3 +69,4 @@ Example:
 ```bash
 curl --header "Content-Type: application/json" --request POST --data '{"id":"1"}'  localhost:7001/debug/read
 ```
+<img src="../img/read.png">
