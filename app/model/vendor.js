@@ -1,30 +1,35 @@
 "use strict";
 
 module.exports = (app) => {
-	const { STRING, INTEGER } = app.Sequelize;
-
-	const Vendor = app.model.define("vendor", {
+	const mongoose = app.mongoose;
+	const VendorSchema = new mongoose.Schema({
 		id: {
-			primaryKey: true,
-			type: INTEGER,
-			allowNull: false,
-			autoIncrement: true,
+			unique: true,
+			type: Number,
+			required: true,
+			// autoIncrement: true,
 		},
 		name: {
-			type: STRING(100),
-			allowNull: false,
+			type: String,
+			maxlength: 100,
+			minlength: 0,
+			required: true,
 		},
 		description: {
-			type: STRING(200),
-			allowNull: true,
-			defaultValue: null,
+			type: String,
+			maxlength: 200,
+			minlength: 0,
+			required: true,
+			default: null,
 		},
 		role: {
-			type: STRING(100),
-			allowNull: false,
-			defaultValue: "contractor",
+			type: String,
+			maxlength: 100,
+			minlength: 0,
+			required: true,
+			default: "contractor",
 		},
 	});
 
-	return Vendor;
+	return mongoose.model('Vendor', VendorSchema);
 };

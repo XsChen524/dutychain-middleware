@@ -1,49 +1,54 @@
 "use strict";
 
 module.exports = (app) => {
-	const { STRING, INTEGER, DATE } = app.Sequelize;
-
-	const Txn = app.model.define("txn", {
+	const mongoose = app.mongoose;
+	const TxnSchema = new mongoose.Schema({
 		id: {
 			// Digest length 66 for Ethereum, need to confirm HF
-			primaryKey: true,
-			type: STRING(66),
-			allowNull: false,
+			unique: true,
+			type: String,
+			maxlength: 66,
+			minlength: 66,
+			required: true,
 		},
 		blockId: {
-			type: INTEGER,
-			allowNull: false,
+			type: Number,
+			required: true,
 		},
 		type: {
-			type: STRING,
-			allowNull: false,
+			type: String,
+			required: true,
 		},
 		operatorId: {
-			type: INTEGER,
-			allowNull: false,
+			type: Number,
+			required: true,
 		},
 		description: {
-			type: STRING(200),
-			allowNull: true,
-			defaultValue: null,
+			type: String,
+			maxlength: 200,
+			minlength: 200,
+			required: true,
+			default: null,
 		},
 		fromVendor: {
-			type: INTEGER,
-			allowNull: false,
+			type: Number,
+			required: true,
 		},
 		toVendor: {
-			type: INTEGER,
-			allowNull: false,
+			type: Number,
+			required: true,
 		},
 		createdAt: {
-			type: DATE,
-			allowNull: false,
+			type: Date,
+			default: Date.now,
+			required: true,
 		},
 		committedAt: {
-			type: DATE,
-			allowNull: true,
+			type: Date,
+			default: Date.now,
+			required: true,
 		},
 	});
 
-	return Txn;
+	return mongoose.model('Txn', TxnSchema);
 };

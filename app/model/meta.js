@@ -1,35 +1,38 @@
 "use strict";
 
 module.exports = (app) => {
-	const { STRING, INTEGER, TEXT } = app.Sequelize;
-
-	const Meta = app.model.define("meta", {
+	const mongoose = app.mongoose;
+	const MetaSchema = new mongoose.Schema({
 		id: {
-			primaryKey: true,
-			type: INTEGER,
-			allowNull: false,
-			autoIncrement: true,
+			unique: true,
+			type: Number,
+			required: true,
+			// autoIncrement: true,
 		},
 		name: {
-			type: STRING(100),
-			allowNull: false,
+			type: String,
+			maxlength: 100,
+			minlength: 0,
+			required: true,
 		},
 		description: {
-			type: STRING(200),
-			allowNull: true,
-			defaultValue: null,
+			type: String,
+			maxlength: 200,
+			minlength: 0,
+			required: true,
+			default: null,
 		},
 		projectId: {
-			type: INTEGER,
-			allowNull: false,
+			type: Number,
+			required: true,
 		},
 		previousTxns: {
 			// Need to convert to type number[] in service
-			type: TEXT,
-			allowNull: false,
-			defaultValue: "[]",
+			type: String,
+			required: true,
+			default: "[]",
 		},
 	});
 
-	return Meta;
+	return mongoose.model('Meta', MetaSchema);
 };

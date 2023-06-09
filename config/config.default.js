@@ -18,19 +18,6 @@ module.exports = (appInfo) => {
 	// add your middleware config here
 	config.middleware = [];
 
-	config.sequelize = {
-		dialect: "mysql",
-		host: "127.0.0.1",
-		port: 3306,
-		database: "dutychain_middle",
-		username: "dutychain_middle",
-		password: "Fa4Yx7it5NGFDSCG",
-		timezone: "+08:00",
-		define: {
-			timestamps: false, // Auto-update createdAt, updatedAt
-		},
-	};
-
 	config.security = {
 		csrf: {
 			enable: false, // csrf turned off!!!
@@ -43,6 +30,16 @@ module.exports = (appInfo) => {
 	};
 
 	// add your user config here
+
+	config.mongoose = {
+		client: {
+			url: 'mongodb://test:123456@38.147.173.101/test',
+			options: {},
+			// mongoose global plugins, expected a function or an array of function and options
+			plugins: [],
+		},
+	};
+
 	const userConfig = {
 		// myAppName: 'egg',
 	};

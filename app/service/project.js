@@ -10,12 +10,15 @@ class ProjectService extends Service {
 		 * need stringfying at frontend.
 		 */
 		const { name, description, vendorId } = body;
+		let previousId = (await this.ctx.model.Meta.find().sort({ id: -1 }))[0];
+		previousId = previousId === undefined ? 0 : previousId.id;
 		try {
-			const project = await this.ctx.model.Project.create({
+			const project = await this.ctx.model.Project.insertMany([{
+				id: previousId + 1,
 				name,
 				description,
 				vendorId,
-			});
+			}]);
 			return project;
 		} catch (error) {
 			console.error(error);
@@ -24,7 +27,7 @@ class ProjectService extends Service {
 	}
 
 	async findAll() {
-		const projects = await this.ctx.model.Project.findAll();
+		const projects = await this.ctx.model.Project.find();
 		if (!projects) {
 			return undefined;
 		}
