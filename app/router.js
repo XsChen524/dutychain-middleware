@@ -23,6 +23,18 @@ module.exports = (app) => {
 	router.get("/txn", controller.txn.getAllTxns);
 	router.post("/txn", controller.txn.createTxn);
 
+	// Used for Debugging
+	router.get("/debug", controller.debug.index);
+	router.post("/debug", controller.debug.index);
+	router.get("/debug/readall", controller.debug.readAll);
+	router.post("/debug/readall", controller.debug.readAll);
+	router.get("/debug/read", controller.debug.read);
+	router.post("/debug/read", controller.debug.read);
+	router.get("/debug/create", controller.debug.create);
+	router.post("/debug/create", controller.debug.create);
+	router.get("/debug/init", controller.debug.init);
+	router.post("/debug/init", controller.debug.init);
+  
 	// Documents
 	router.get("/document", controller.doc.getDocList);
 	router.post("/document", controller.doc.uploadDoc);

@@ -23,7 +23,11 @@
     "egg-cors": "^2.2.3",
     "egg-mongoose": "^3.3.1",
     "egg-scripts": "^2",
-    "moment": "^2.29.4"
+    "egg-sequelize": "^6.0.0",
+    "fabric-ca-client": "^2.2.18",
+    "fabric-network": "^2.2.18",
+    "moment": "^2.29.4",
+    "mysql2": "^3.3.2"
   },
   "devDependencies": {
     "egg-bin": "^5",
