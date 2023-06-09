@@ -6,7 +6,7 @@ class DebugController extends Controller {
 	async index() {
 		const { ctx } = this;
 		ctx.body = 'hi, debugger';
-	};
+	}
 
 	async create() {
 		const { ctx } = this;
@@ -33,13 +33,12 @@ class DebugController extends Controller {
 		return;
 	}
 
-	async read(){
+	async read() {
 		const { ctx } = this;
 		const res = await ctx.service.debug.read(ctx.request.body);
 		if (!res) {
 			ctx.status = 406;
-		}
-		else{
+		} else {
 			ctx.status = 201;
 		}
 		ctx.body = res;

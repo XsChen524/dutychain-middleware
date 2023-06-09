@@ -29,11 +29,11 @@ class DocService extends Service {
 				.digest('hex');
 			console.log(hash);
 			const requestJson = {
-				type: "doc",
 				hash,
 				vendorId,
 			};
 			console.log(JSON.stringify(requestJson));
+			this.ctx.service.debug.create({ type: "doc", requestJson });
 			return txn;
 		} catch (error) {
 			console.error(error);

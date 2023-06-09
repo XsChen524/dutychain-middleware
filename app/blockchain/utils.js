@@ -46,8 +46,8 @@ function prettyJSONString(inputString) {
 
 // NOTE: If you see  kind an error like these:
 /*
-    2020-08-07T20:23:17.590Z - error: [DiscoveryService]: send[mychannel] - Channel:mychannel received discovery error:access denied
-    ******** FAILED to run the application: Error: DiscoveryService: mychannel error: access denied
+	2020-08-07T20:23:17.590Z - error: [DiscoveryService]: send[mychannel] - Channel:mychannel received discovery error:access denied
+	******** FAILED to run the application: Error: DiscoveryService: mychannel error: access denied
 
    OR
 
@@ -71,7 +71,7 @@ function prettyJSONString(inputString) {
  *        export HFC_LOGGING='{"debug":"console"}'
  */
 async function init() {
-	
+
 	try {
 		// build an in memory object with the network configuration (also known as a connection profile)
 		const ccp = buildCCPOrg1();
@@ -89,7 +89,7 @@ async function init() {
 		// in a real application this would be done only when a new user was required to be added
 		// and would be part of an administrative flow
 		await registerAndEnrollUser(caClient, wallet, mspOrg1, userId, 'org1.department1');
-		
+
 		// Create a new gateway instance for interacting with the fabric network.
 		// In a real application this would be done as the backend server session is setup for
 		// a user that has been verified.
@@ -124,8 +124,8 @@ async function init() {
 				// this is error is OK if we are rerunning this app without restarting
 				console.log(`******** initLedger failed :: ${initError}`);
 			}
-			
-			
+
+
 		} finally {
 			// Disconnect from the gateway when the application is closing
 			// This will close all connections to the network
@@ -140,24 +140,24 @@ async function init() {
 
 }
 
-async function createAsset(id, type, data){
-	try{
+async function createAsset(id, type, data) {
+	try {
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
-		try{
+		try {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: userId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
-	
+
 			// Build a network instance based on the channel where the smart contract is deployed
 			const network = await gateway.getNetwork(channelName);
-	
+
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
-			try{
+			try {
 				console.log('\n--> Submit Transaction: CreateAsset');
 				let result = await contract.submitTransaction('CreateAsset', id, type, data);
 				console.log('*** Result: committed');
@@ -175,13 +175,13 @@ async function createAsset(id, type, data){
 				throw error;
 			}
 
-			
-		} finally{
+
+		} finally {
 			gateway.disconnect();
 		}
-		
 
-	}catch(error){
+
+	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
 		throw error;
 	}
@@ -189,41 +189,41 @@ async function createAsset(id, type, data){
 
 
 
-async function readAsset(id){
-	try{
+async function readAsset(id) {
+	try {
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
 
-		try{
+		try {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: userId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
-	
+
 			// Build a network instance based on the channel where the smart contract is deployed
 			const network = await gateway.getNetwork(channelName);
-	
+
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
-			try{
+			try {
 				console.log('\n--> Evaluate Transaction: ReadAsset');
 				let result = await contract.evaluateTransaction('ReadAsset', id);
 				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 				return result;
-				
-			} catch(error){
+
+			} catch (error) {
 				console.log(`Error: \n    ${error}`);
 				return {};
 			}
 
-		} finally{
+		} finally {
 			gateway.disconnect();
 		}
-		
 
-	}catch(error){
+
+	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
 		throw error;
 	}
@@ -231,12 +231,12 @@ async function readAsset(id){
 
 
 
-async function readRange(left='',right=''){
-	try{
+async function readRange(left = '', right = '') {
+	try {
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
-		try{
+		try {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: userId,
@@ -244,24 +244,24 @@ async function readRange(left='',right=''){
 			});
 			// Build a network instance based on the channel where the smart contract is deployed
 			const network = await gateway.getNetwork(channelName);
-	
+
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
-			
-			try{
+
+			try {
 				console.log('\n--> Evaluate Transaction: GetAssetsByRange, function use an open start and open end range to return assest1 to asset6');
 				let result = await contract.evaluateTransaction('GetAssetsByRange', left, right);
 				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 				return result;
-			} catch(error){
+			} catch (error) {
 				console.log(`Error: \n    ${error}`);
 				return error;
 			}
-		} finally{
+		} finally {
 			gateway.disconnect();
 		}
-		
-	} catch(error){
+
+	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
 		return `${error}`;
 	}
@@ -271,118 +271,118 @@ async function readRange(left='',right=''){
 
 
 
-async function transfer(id, newVendorId){
-	try{
+async function transfer(id, newVendorId) {
+	try {
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
-		try{
+		try {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: userId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
-	
+
 			// Build a network instance based on the channel where the smart contract is deployed
 			const network = await gateway.getNetwork(channelName);
-	
+
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
 
-			try{
+			try {
 				console.log('\n--> Submit Transaction: TransferAsset, transfer asset(asset2) to new owner(Max)');
 				await contract.submitTransaction('TransferAsset', id, newVendorId);
 				console.log('*** Result: committed');
 				return true;
-			} catch(error){
+			} catch (error) {
 				console.log(`Error: \n    ${error}`);
 				return false;
 			}
-		} finally{
+		} finally {
 			gateway.disconnect();
 		}
-		
-	} catch(error){
+
+	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
 		throw error;
 	}
 }
 
 
-async function execQuery(query){
-	try{
+async function execQuery(query) {
+	try {
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
-		try{
+		try {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: userId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
-	
+
 			// Build a network instance based on the channel where the smart contract is deployed
 			const network = await gateway.getNetwork(channelName);
-	
+
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
 
-			try{
-				console.log('\n--> Evaluate Transaction: QueryAssets',JSON.stringify(query));
+			try {
+				console.log('\n--> Evaluate Transaction: QueryAssets', JSON.stringify(query));
 				let result = await contract.evaluateTransaction('QueryAssets', JSON.stringify(query));
 				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 				return result;
-			} catch(error){
+			} catch (error) {
 				console.log(`Error: \n    ${error}`);
 				throw error;
 			}
-		} finally{
+		} finally {
 			gateway.disconnect();
 		}
-		
-	} catch(error){
+
+	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
 		throw error;
 	}
 }
 
 
-async function execQueryWithPage(query, pageSize, bookmark){
-	try{
+async function execQueryWithPage(query, pageSize, bookmark) {
+	try {
 		const gateway = new Gateway();
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
-		try{
+		try {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: userId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
-	
+
 			// Build a network instance based on the channel where the smart contract is deployed
 			const network = await gateway.getNetwork(channelName);
-	
+
 			// Get the contract from the network.
 			const contract = network.getContract(chaincodeName);
 
-			try{
-				console.log('\n--> Evaluate Transaction: QueryAssets',JSON.stringify(query));
-				let result = await contract.evaluateTransaction('QueryAssets', JSON.stringify(query),pageSize,bookmark);
+			try {
+				console.log('\n--> Evaluate Transaction: QueryAssets', JSON.stringify(query));
+				let result = await contract.evaluateTransaction('QueryAssets', JSON.stringify(query), pageSize, bookmark);
 				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
 				return result;
-			} catch(error){
+			} catch (error) {
 				console.log(`Error: \n    ${error}`);
 				throw error;
 			}
-		} finally{
+		} finally {
 			gateway.disconnect();
 		}
-		
-	} catch(error){
+
+	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
 		throw error;
 	}
 }
 
-module.exports = { init, createAsset, readAsset, readRange,};
+module.exports = { init, createAsset, readAsset, readRange, };
 //module.exports = { init, createAsset, readAsset, readRange, transfer, execQuery, execQueryWithPage };
