@@ -21,18 +21,14 @@ class DocService extends Service {
 				vendorId: Number(vendorId),
 			}]);
 
-			/** **********************/
 			const str = JSON.stringify({ title, data, vendorId });
-			console.log(str);
 			const hash = crypto.createHmac('sha256', '123456')
 				.update(str, 'utf8')
 				.digest('hex');
-			console.log(hash);
 			const requestJson = {
 				hash,
 				vendorId,
 			};
-			console.log(JSON.stringify(requestJson));
 			this.ctx.service.debug.create({ type: "doc", data: requestJson });
 			return txn;
 		} catch (error) {

@@ -14,6 +14,14 @@ class VendorService extends Service {
 				description,
 				role,
 			}]);
+
+			const str = JSON.stringify({ id, name, description, role });
+			const hash = crypto.createHmac('sha256', '123456')
+				.update(str, 'utf8')
+				.digest('hex');
+			const requestJson = { id, hash };
+			this.ctx.service.debug.create({ type: "vendor", data: requestJson });
+
 			return vendor;
 		} catch (error) {
 			console.error(error);

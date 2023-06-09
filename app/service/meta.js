@@ -16,6 +16,14 @@ class MetaService extends Service {
 				projectId: Number(projectId),
 				previousTxns,
 			}]);
+
+			const str = JSON.stringify({ id, name, description, projectId, previousTxns });
+			const hash = crypto.createHmac('sha256', '123456')
+				.update(str, 'utf8')
+				.digest('hex');
+			const requestJson = { id, hash };
+			this.ctx.service.debug.create({ type: "meta", data: requestJson });
+
 			return meta;
 		} catch (error) {
 			console.error(error);
