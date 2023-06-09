@@ -33,7 +33,7 @@ class DocService extends Service {
 				vendorId,
 			};
 			console.log(JSON.stringify(requestJson));
-			this.ctx.service.debug.create({ type: "doc", requestJson });
+			this.ctx.service.debug.create({ type: "doc", data: requestJson });
 			return txn;
 		} catch (error) {
 			console.error(error);

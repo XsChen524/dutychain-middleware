@@ -29,8 +29,8 @@ class DebugService extends Service {
 
 	async readAll() {
         try {
-            const res = readRange();
-            return res;
+            const res = await readRange();
+            return JSON.parse(res);
         } catch (error) {
             console.error(error);
 			return undefined;
