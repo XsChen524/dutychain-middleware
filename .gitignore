@@ -14,3 +14,5 @@ run/
 typings/
 .nyc_output/
 app/blockchain/wallet/
+
+/.github
