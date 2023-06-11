@@ -6,5 +6,6 @@
 	"arrowParens": "always",
 	"endOfLine": "lf",
 	"quoteProps": "as-needed",
-	"editorconfig": true
+	"editorconfig": true,
+	"bracketSpacing": true
 }
