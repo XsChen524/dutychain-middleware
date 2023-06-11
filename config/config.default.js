@@ -33,8 +33,10 @@ module.exports = (appInfo) => {
 
 	config.mongoose = {
 		client: {
-			url: 'mongodb://test:123456@38.147.173.101/test',
-			options: {},
+			url: "mongodb://localhost:27017/db_egg",
+			options: {
+				useUnifiedTopology: true,
+			},
 			// mongoose global plugins, expected a function or an array of function and options
 			plugins: [],
 		},
