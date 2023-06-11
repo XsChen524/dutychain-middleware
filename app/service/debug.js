@@ -10,32 +10,35 @@ const { randomString } = require("../utils/utils");
 class DebugService extends Service {
 
 
-	async create(body) {
-		/**
-		 * @param {String} vendorId Get string from request body,
-		 * need stringfying at frontend.
-		 */
-		const { type, data } = body;
-		try {
-            const id = "0x000000000000000000000000000000000000000000000000" +	randomString(16);
+    async create(body) {
+        /**
+         * @param {String} vendorId Get string from request body,
+         * need stringfying at frontend.
+         */
+        const { type, id: docId, data } = body;
+        try {
+            // throw new Error('test');
+            const id = "0x000000000000000000000000000000000000000000000000" + randomString(16);
             const res = createAsset(id, type, JSON.stringify(data));
-			return res;
+            return res;
 
-		} catch (error) {
-			console.error(error);
-			return error;
-		}
-	}
+        } catch (error) {
+            console.error(error);
+            console.log(docId);
+            await this.ctx.service.doc.delete(docId);
+            return error;
+        }
+    }
 
-	async readAll() {
+    async readAll() {
         try {
             const res = await readRange();
             return JSON.parse(res);
         } catch (error) {
             console.error(error);
-			return undefined;
+            return undefined;
         }
-	}
+    }
 
     async read(body) {
         const { id } = body;
@@ -48,10 +51,10 @@ class DebugService extends Service {
             return res;
         } catch (error) {
             console.error(error);
-			return error;
+            return error;
         }
 
-	}
+    }
 
     async init() {
         try {
@@ -59,9 +62,9 @@ class DebugService extends Service {
             return "init success";
         } catch (error) {
             console.error(error);
-			return error;
+            return error;
         }
-	}
+    }
 }
 
 module.exports = DebugService;
