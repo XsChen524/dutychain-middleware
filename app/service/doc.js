@@ -44,9 +44,9 @@ class DocService extends Service {
 		return txns;
 	}
 
-	async delete(id){
-		const txns = await this.ctx.model.Doc.deleteOne({id:id});
-		if(!txns){
+	async delete(id) {
+		const txns = await this.ctx.model.Doc.deleteOne({ id });
+		if (!txns) {
 			console.log("Auto deleted failed, please delete this document manually!");
 		}
 		return txns;
