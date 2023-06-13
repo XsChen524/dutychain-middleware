@@ -34,7 +34,7 @@ module.exports = (app) => {
 	router.post("/debug/create", controller.debug.create);
 	router.get("/debug/init", controller.debug.init);
 	router.post("/debug/init", controller.debug.init);
-  
+
 	// Documents
 	router.get("/document", controller.doc.getDocList);
 	router.post("/document", controller.doc.uploadDoc);

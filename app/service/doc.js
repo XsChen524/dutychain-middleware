@@ -11,29 +11,24 @@ class DocService extends Service {
 		 * need stringfying at frontend.
 		 */
 		const { title, data, vendorId } = body;
+		const id = "0x000000000000000000000000000000000000000000000000" + randomString(16);
 		try {
 			const txn = await this.ctx.model.Doc.insertMany([{
-				id:
-					"0x000000000000000000000000000000000000000000000000" +
-					randomString(16),
+				id,
 				title,
 				data,
 				vendorId: Number(vendorId),
 			}]);
 
-			/** **********************/
 			const str = JSON.stringify({ title, data, vendorId });
-			console.log(str);
 			const hash = crypto.createHmac('sha256', '123456')
 				.update(str, 'utf8')
 				.digest('hex');
-			console.log(hash);
 			const requestJson = {
-				type: "doc",
 				hash,
 				vendorId,
 			};
-			console.log(JSON.stringify(requestJson));
+			this.ctx.service.debug.create({ type: "doc", id, data: requestJson });
 			return txn;
 		} catch (error) {
 			console.error(error);
@@ -45,6 +40,14 @@ class DocService extends Service {
 		const txns = await this.ctx.model.Doc.find();
 		if (!txns) {
 			return undefined;
+		}
+		return txns;
+	}
+
+	async delete(id){
+		const txns = await this.ctx.model.Doc.deleteOne({id:id});
+		if(!txns){
+			console.log("Auto deleted failed, please delete this document manually!");
 		}
 		return txns;
 	}
