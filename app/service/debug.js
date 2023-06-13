@@ -4,11 +4,11 @@ const Service = require("egg").Service;
 // const Sequelize = require("sequelize");
 // const { randomString } = require("../utils/utils");
 // const { init, createAsset, readAsset, readRange, transfer, execQuery, execQueryWithPage } = require("../blockchain/utils");
+
 const { init, createAsset, readAsset, readRange } = require("../blockchain/utils");
 const { randomString } = require("../utils/utils");
 
 class DebugService extends Service {
-
 
     async create(body) {
         /**
