@@ -13,4 +13,20 @@ const channels = [
 	{ projectId: 2, name: "New City", vendorId: [2, 3, 4] },
 ];
 
+const request = {
+	header: { authorization: jwt },
+	body: {
+		operation: {
+			type: "transfer",
+			targetId: 3,
+		},
+		idendity: {
+			channel: "Pokfulam Garden",
+			organization: "CheungKong",
+			user: "user1",
+			idDigest: "35a99a53ff1b46f86a14a375742dfd7c",
+		},
+	},
+};
+
 module.exports = { organizations, channels };
