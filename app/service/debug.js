@@ -16,17 +16,9 @@ class DebugService extends Service {
          * need stringfying at frontend.
          */
         const { type, id, data } = body;
-        try {
-            // throw new Error('test');
-            const res = createAsset(id, type, JSON.stringify(data));
-            return res;
-
-        } catch (error) {
-            console.error(error);
-            console.log(id);
-            await this.ctx.service.doc.delete(id);
-            return error;
-        }
+        throw new Error('Ledger create asset failed. ');
+        const res = createAsset(id, type, JSON.stringify(data));
+        return res;
     }
 
     async readAll() {
