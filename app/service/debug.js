@@ -15,19 +15,10 @@ class DebugService extends Service {
          * @param {String} vendorId Get string from request body,
          * need stringfying at frontend.
          */
-        const { type, id: docId, data } = body;
-        try {
-            // throw new Error('test');
-            const id = "0x000000000000000000000000000000000000000000000000" + randomString(16);
-            const res = createAsset(id, type, JSON.stringify(data));
-            return res;
-
-        } catch (error) {
-            console.error(error);
-            console.log(docId);
-            await this.ctx.service.doc.delete(docId);
-            return error;
-        }
+        const { type, id, data } = body;
+        // throw new Error('Ledger create asset failed. ');
+        const res = createAsset(id, type, JSON.stringify(data));
+        return res;
     }
 
     async readAll() {

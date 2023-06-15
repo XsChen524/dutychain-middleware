@@ -28,10 +28,16 @@ class DocService extends Service {
 				hash,
 				vendorId,
 			};
-			this.ctx.service.debug.create({ type: "doc", id, data: requestJson });
+			await this.ctx.service.debug.create({ type: "doc", id, data: requestJson });
 			return txn;
 		} catch (error) {
 			console.error(error);
+			try {
+				await this.ctx.service.doc.delete(id);
+			} catch (error) {
+				console.error(error);
+				console.log("Auto deletion failed, please delete this document manually.");
+			};
 			return undefined;
 		}
 	}
@@ -44,9 +50,10 @@ class DocService extends Service {
 		return txns;
 	}
 
-	async delete(id){
-		const txns = await this.ctx.model.Doc.deleteOne({id:id});
-		if(!txns){
+	async delete(id) {
+		// throw new Error('Deletion failed.');
+		const txns = await this.ctx.model.Doc.deleteOne({ id });
+		if (!txns) {
 			console.log("Auto deleted failed, please delete this document manually!");
 		}
 		return txns;
