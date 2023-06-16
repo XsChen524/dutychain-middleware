@@ -7,6 +7,7 @@
 		"indent": "off",
 		"no-unused-vars": "warn",
 		"arrow-parens": "off",
+		"array-bracket-spacing": "off",
 		"sort-imports-es6-autofix/sort-imports-es6": [
 			"warn",
 			{
