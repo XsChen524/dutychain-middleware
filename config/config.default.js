@@ -31,14 +31,14 @@ module.exports = (appInfo) => {
 
 	config.jwt = {
 		secret: config.keys,
-		/*
 		sign: {
 			expiresIn: 600000,
 		},
-		*/
 	};
 
-	// add your user config here
+	config.bcrypt = {
+		saltRounds: 10,
+	};
 
 	config.mongoose = {
 		client: {
