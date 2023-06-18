@@ -56,6 +56,19 @@ class DebugController extends Controller {
 		ctx.body = res;
 		return;
 	}
+
+
+	async debugReadAll() {
+		const ctx = this.ctx;
+		const res = await ctx.service.debug.debugReadAll();
+		if (res) {
+			ctx.status = 200;
+		} else {
+			ctx.status = 400;
+		}
+		ctx.body = res;
+		return;
+	}
 }
 
 module.exports = DebugController;

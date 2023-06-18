@@ -1,29 +1,33 @@
 "use strict";
 
-const Service = require("egg").Service;
-// const Sequelize = require("sequelize");
-// const { randomString } = require("../utils/utils");
-// const { init, createAsset, readAsset, readRange, transfer, execQuery, execQueryWithPage } = require("../blockchain/utils");
 
-const { init, createAsset, readAsset, readRange } = require("../blockchain/utils");
+const Service = require("egg").Service;
+const crypto = require('crypto');
+// const Sequelize = require("sequelize");
+
+const { init, createAsset, readAsset, readRange, createWallet, enroll, debugReadAll} = require("../blockchain/utils");
 const { randomString } = require("../utils/utils");
 
 class DebugService extends Service {
 
-    async create(body) {
+    async create(body, walletId, walletPath) {
         /**
          * @param {String} vendorId Get string from request body,
          * need stringfying at frontend.
          */
-        const { type, id, data } = body;
-        // throw new Error('Ledger create asset failed. ');
-        const res = createAsset(id, type, JSON.stringify(data));
+
+        const {type, id, data} = body
+
+        //const wallet = await this.ctx.service.wallet.getWallet(userId);
+        const res = createAsset(id, type, JSON.stringify(data), walletId, walletPath);
         return res;
     }
 
-    async readAll() {
+    async readAll(body, walletId, walletPath) {
         try {
-            const res = await readRange();
+
+            const { userId } = body;
+            const res = await readRange('','', walletId, walletPath);
             return JSON.parse(res);
         } catch (error) {
             console.error(error);
@@ -31,14 +35,14 @@ class DebugService extends Service {
         }
     }
 
-    async read(body) {
+    async read(body, walletId, walletPath) {
         const { id } = body;
         try {
             if (id === undefined) {
                 console.log("ID cannot be empty");
                 throw new Error("ID cannot be empty");
             }
-            const res = readAsset(id);
+            const res = readAsset(id, walletId, walletPath);
             return res;
         } catch (error) {
             console.error(error);
@@ -53,9 +57,19 @@ class DebugService extends Service {
             return "init success";
         } catch (error) {
             console.error(error);
-            return error;
+            throw error;
         }
     }
+
+    async debugReadAll() {
+        try {
+            const res = await debugReadAll('','');
+            return JSON.parse(res);
+        } catch (error) {
+            console.error(error);
+            return undefined;
+        }
+    }    
 }
 
 module.exports = DebugService;

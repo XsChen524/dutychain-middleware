@@ -33,7 +33,7 @@ module.exports = (appInfo) => {
 
 	config.mongoose = {
 		client: {
-			url: "mongodb://38.147.173.101:27017/db_egg",
+			url: "mongodb://localhost:27017/db_egg",
 			options: {
 				useUnifiedTopology: true,
 			},
