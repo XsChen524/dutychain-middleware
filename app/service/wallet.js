@@ -34,9 +34,6 @@ class WalletService extends Service {
         //=========================================================================================
 
         const walletPath = await createWallet(walletId);
-        //const wallet_string = JSON.stringify(wallet);
-        //console.log("wallet:",wallet);
-        //console.log("wallet string",wallet_string);
 
 
         const wallet_data = new this.ctx.model.Wallet({
@@ -50,61 +47,26 @@ class WalletService extends Service {
     }
 
 
-    async bindIdentity(userId, walletId){
-        // await this.ctx.model.Identity.create({
-		// 	userId: Number(userId),
-		// 	walletId: Number(walletId),
-		// });
-
-        const data = new this.ctx.model.UserWallet({
-			userId: userId,
-			walletId: walletId,
-		});
-        data.save();
-    }
-
     async enrollIdentity(walletPath, walletId){
         await enroll(walletPath,walletId);
     }
 
 
-    async enrollUser(userId){
-        const walletPath = await this.getIdentity(userId);
-        await enroll(walletPath);
-    }
+    async getIdentity(walletId){
 
-
-    async getIdentity(userId){
-
-        this.ctx.model.UserWallet.find({userId:1}, function(err, data){
-            if(err){
-                console.err(err);
-                throw err;
-            }
-
-            console.log("identity_data:",data);
+        this.ctx.model.Wallet.findOne({walletId:walletId})
+        .then((data)=>{
             if(!data){
                 return undefined;
             }
-
-            const walletId = data[0].walletId;
-            console.log("walletId:",walletId);
-
-            // this.ctx.model.Wallet.find({walletId:walletId},function(err,data){
-            //     if(err){
-            //         console.err(err);
-            //         throw err;
-            //     }
-
-            //     if(!data){
-            //         return undefined;
-            //     }
-            //     console.log("wallet data:",data);
-            //     const walletPath = data[0].wallet;
-            //     console.log("walletPath:",walletPath);
-            //     return walletPath;
-            // });
-            
+            console.log("wallet data:",data);
+            const walletPath = data.wallet;
+            console.log("walletPath:",walletPath);
+            return walletPath;
+        })
+        .catch((err)=>{
+            console.err(err);
+            throw err;
         });
     }
 }

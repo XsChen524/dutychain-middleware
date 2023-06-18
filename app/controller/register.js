@@ -23,6 +23,18 @@ class RegisterController extends Controller {
 		return;
     }
 
+	async getIdentity(){
+		const { ctx } = this;
+		const res = await ctx.service.wallet.getIdentity(1);
+		if (!res) {
+			ctx.status = 406;
+			ctx.body = undefined;
+			return;
+		}
+		ctx.status = 201;
+		ctx.body = res;
+		return;
+	}
 }
 
 module.exports = RegisterController;

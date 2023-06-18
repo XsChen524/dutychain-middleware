@@ -121,7 +121,6 @@ async function createWallet(walletId){
 
 async function enroll(walletPath, walletId){
 	const ccp = buildCCPOrg1();
-	//const initWalletPath = path.join(__dirname, 'wallet','init');
 	const wallet = await buildWallet(Wallets, walletPath);
 	const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
 
@@ -210,7 +209,6 @@ async function createAsset(id, type, data, walletId, walletPath) {
     */
 	try {
 		const gateway = new Gateway();
-		//const initWalletPath = path.join(__dirname, 'wallet','init');
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
 		try {

@@ -5,7 +5,7 @@ const Service = require("egg").Service;
 const crypto = require('crypto');
 // const Sequelize = require("sequelize");
 
-const { init, createAsset, readAsset, readRange, createWallet, enroll, debugReadAll} = require("../blockchain/utils");
+const { init, createAsset, readAsset, readRange, debugReadAll} = require("../blockchain/utils");
 const { randomString } = require("../utils/utils");
 
 class DebugService extends Service {

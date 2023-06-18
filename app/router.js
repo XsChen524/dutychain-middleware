@@ -24,6 +24,7 @@ module.exports = (app) => {
 	router.post("/txn", controller.txn.createTxn);
 
 	// Register
+	router.get("/register", controller.register.getIdentity);
 	router.post("/register", controller.register.register);
 
 	// Used for Debugging
