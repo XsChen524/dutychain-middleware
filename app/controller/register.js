@@ -25,7 +25,8 @@ class RegisterController extends Controller {
 
 	async getIdentity(){
 		const { ctx } = this;
-		const res = await ctx.service.wallet.getIdentity(1);
+		const {walletId} = ctx.request.body;
+		const res = await ctx.service.wallet.getIdentity(walletId);
 		if (!res) {
 			ctx.status = 406;
 			ctx.body = undefined;

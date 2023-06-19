@@ -41,15 +41,21 @@ $ rm -rf *
 $ cd hyperledger/test-network
 $ ./network.sh down
 
+# clean up wallets
 $ cd app/blockchain
 $ rm -rf wallet
+
+# drop database schema
+$ mongosh
+$ use db_egg
+$ db.dropDatabase()
 ```
 
 
 ## APIs
 
 ### init
-initialize the ledger, must call this first before calling any other API
+initialize the ledger, before using blockchain, must call this first before calling any other API
 
 <B>No parameters are required</B>
 
@@ -59,40 +65,33 @@ $ curl --header "Content-Type: application/json" --request POST localhost:7001/d
 ```
 <img src="img/debug.png">
 
-### readall
-Get all assets in the network
+### debugReadAll <B>read all in using admin identity</B>
+<B> for debug usage only, don't call this</B>
+Get all assets in the network, no identity(wallet) is required.
 
 <B>No paramters are required</B>
 
 Example:
 ```bash
-curl --header "Content-Type: application/json" --request POST localhost:7001/debug/readall
+curl --header "Content-Type: application/json" --request POST localhost:7001/debug/debugReadAll
 ```
-<img src="img/readall.png">
+<img src="img/debugReadAll.png">
 
-### create
-add an asset to the hyperledger network
+### Register
+create a <B>{walletID, wallet}</B> pair, save the wallet path to mongoDB with key walletID, return walletID 
 
-<B>required to have the following fields in the input JSON:</B>
-* id: string
-* type: string
-* data: JSON
-
-Example:
-<img src="img/create.png">
-
-### read
-Get the asset with the given ID in the network
-
-<B>required to have the following fields in the input JSON:</B>
-* id: string
-
-Example:
 ```bash
-curl --header "Content-Type: application/json" --request POST --data '{"id":"1"}'  localhost:7001/debug/read
+curl --header "Content-Type: application/json" --request POST localhost:7001/register/
 ```
-<img src="img/read.png">
+<img src="img/register.png">
 
+### Get Identity
+given walletId, return wallet path 
+
+```bash
+curl --header "Content-Type: application/json" --request GET localhost:7001/register/
+```
+<img src="img/getIdentity.png">
 
 ### npm scripts
 
