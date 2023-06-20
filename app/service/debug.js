@@ -10,24 +10,24 @@ const { randomString } = require("../utils/utils");
 
 class DebugService extends Service {
 
-    async create(body, walletId, walletPath) {
+    async create(body) {
         /**
          * @param {String} vendorId Get string from request body,
          * need stringfying at frontend.
          */
 
-        const {type, id, data} = body
+        const {type, id, data, walletId, org} = body
 
         //const wallet = await this.ctx.service.wallet.getWallet(userId);
-        const res = createAsset(id, type, JSON.stringify(data), walletId, walletPath);
+        const res = createAsset(id, type, JSON.stringify(data), walletId.toString(), org);
         return res;
     }
 
-    async readAll(body, walletId, walletPath) {
+    async readAll(body) {
         try {
 
-            const { userId } = body;
-            const res = await readRange('','', walletId, walletPath);
+            const { walletId, org } = body;
+            const res = await readRange('','', walletId.toString(), org);
             return JSON.parse(res);
         } catch (error) {
             console.error(error);
@@ -35,14 +35,14 @@ class DebugService extends Service {
         }
     }
 
-    async read(body, walletId, walletPath) {
-        const { id } = body;
+    async read(body) {
+        const { id, walletId, org } = body;
         try {
             if (id === undefined) {
                 console.log("ID cannot be empty");
                 throw new Error("ID cannot be empty");
             }
-            const res = readAsset(id, walletId, walletPath);
+            const res = readAsset(id, walletId.toString(), org);
             return res;
         } catch (error) {
             console.error(error);

@@ -12,7 +12,8 @@ class RegisterController extends Controller {
 
 	async register(){
         const { ctx } = this;
-		const res = await ctx.service.register.register();
+		const {org} = ctx.request.body;
+		const res = await ctx.service.register.register(org);
 		if (!res) {
 			ctx.status = 406;
 			ctx.body = undefined;
@@ -23,19 +24,6 @@ class RegisterController extends Controller {
 		return;
     }
 
-	async getIdentity(){
-		const { ctx } = this;
-		const {walletId} = ctx.request.body;
-		const res = await ctx.service.wallet.getIdentity(walletId);
-		if (!res) {
-			ctx.status = 406;
-			ctx.body = undefined;
-			return;
-		}
-		ctx.status = 201;
-		ctx.body = res;
-		return;
-	}
 }
 
 module.exports = RegisterController;

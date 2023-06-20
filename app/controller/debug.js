@@ -22,8 +22,8 @@ class DebugController extends Controller {
 	}
 
 	async readAll() {
-		const ctx = this.ctx;
-		const res = await ctx.service.debug.readAll();
+		const { ctx } = this;
+		const res = await ctx.service.debug.readAll(ctx.request.body);
 		if (res) {
 			ctx.status = 200;
 		} else {

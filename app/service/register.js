@@ -1,19 +1,20 @@
 "use strict";
 
 const Service = require("egg").Service;
+const { registerUser } = require("../blockchain/utils");
+const { randomString } = require("../utils/utils");
+
 
 class RegisterService extends Service {
 
 
-    async register(){
+    async register(org){
 		
         try{
-            const {walletId, walletPath} = await this.ctx.service.wallet.createIdentity();
-            console.log("walletId:",walletId);
-            console.log("walletPath:",walletPath);
-
-            // enroll user
-            await this.ctx.service.wallet.enrollIdentity(walletPath, walletId);
+            
+            //const walletId = randomString(128);
+            const walletId = Date.now().toString();
+            registerUser(org,walletId);
 
             return walletId;
 
