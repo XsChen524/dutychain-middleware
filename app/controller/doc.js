@@ -1,7 +1,5 @@
 "use strict";
 
-const doc = require("../model/doc");
-
 const Controller = require("egg").Controller;
 
 class DocController extends Controller {
