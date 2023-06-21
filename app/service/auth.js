@@ -33,17 +33,20 @@ class AuthService extends Service {
 	async register(body) {
 		// const hash = bcrypt.hashSync(password, this.config.bcrypt.saltRounds);
 		const { name, password, email, organization, role } = body;
+		const walletId = await this.ctx.service.register.register(organization);
+		console.log(walletId);
 		let previousId = (
-			await this.ctx.model.Auth.Meta.find().sort({ id: -1 })
+			await this.ctx.model.Auth.User.find().sort({ id: -1 })
 		)[0];
 		previousId = previousId === undefined ? 0 : previousId.id;
-		const user = await this.ctx.model.User.create({
+		const user = await this.ctx.model.Auth.User.create({
 			id: previousId + 1,
 			name,
 			password,
 			email,
 			organization,
 			role,
+			walletId,
 		});
 		return user;
 	}
@@ -58,7 +61,7 @@ class AuthService extends Service {
 		const user = (await this.ctx.model.Auth.User.find({ name }))[0];
 		if (!user) return undefined;
 		if (password === user.password) {
-			const { id } = user;
+			const { id, walletId } = user;
 			const {
 				jwt: {
 					secret,
@@ -73,7 +76,7 @@ class AuthService extends Service {
 				secret,
 				{ expiresIn }
 			); // Token generation, expires in 7 days
-			return { id, name, token };
+			return { id, name, walletId, token };
 		}
 	}
 }

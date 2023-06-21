@@ -35,6 +35,10 @@ module.exports = (app) => {
 			require: false,
 			default: false,
 		},
+		walletId: {
+			type: String,
+			required: true
+		}
 	});
 	return mongoose.model("User", UserSchema);
 };
