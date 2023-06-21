@@ -10,6 +10,7 @@ class DocService extends Service {
 		 * @param {Object} data Get string from request body,
 		 * need stringfying at frontend.
 		 */
+		console.log(body)
 		const { title, data, vendorId, walletId, org } = body;
 		const id = "0x000000000000000000000000000000000000000000000000" + randomString(16);
 		try {
