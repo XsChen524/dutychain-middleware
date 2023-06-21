@@ -8,11 +8,17 @@ class DocController extends Controller {
 		const doc = await ctx.service.doc.insert(ctx.request.body);
 		if (!doc) {
 			ctx.status = 406;
-			ctx.body = undefined;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
 			return;
 		}
 		ctx.status = 201;
-		ctx.body = doc;
+		ctx.body = {
+			success: true,
+			data: doc,
+		};
 		return;
 	}
 
@@ -21,10 +27,17 @@ class DocController extends Controller {
 		const docs = await ctx.service.doc.find();
 		if (docs) {
 			ctx.status = 200;
+			ctx.body = {
+				success: true,
+				data: docs,
+			};
 		} else {
 			ctx.status = 400;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
 		}
-		ctx.body = docs;
 		// ctx.body = 'document';
 		return;
 	}

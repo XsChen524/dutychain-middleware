@@ -30,6 +30,11 @@ module.exports = (app) => {
 			type: String,
 			required: true,
 		},
+		isAdmin: {
+			type: Boolean,
+			require: false,
+			default: false,
+		},
 	});
 	return mongoose.model("User", UserSchema);
 };

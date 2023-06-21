@@ -3,6 +3,25 @@
 const Controller = require("egg").Controller;
 
 class AuthController extends Controller {
+	async getAllOrgs() {
+		const ctx = this.ctx;
+		const orgs = await ctx.service.auth.getOrganizations();
+		if (!orgs) {
+			ctx.status = 400;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
+			return;
+		}
+		ctx.status = 200;
+		ctx.body = {
+			success: true,
+			data: orgs,
+		};
+		return;
+	}
+
 	/**
 	 * register controller
 	 * @return {object} {status, msg}

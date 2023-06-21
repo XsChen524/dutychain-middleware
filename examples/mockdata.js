@@ -29,4 +29,17 @@ const request = {
 	},
 };
 
+const data = [
+	{
+		id: 2,
+		email: "admin@org2.com",
+		name: "admin2",
+		password:
+			"$2a$10$KjQWd7vsgJ8LYsSTHq1Dju2RmV8JC2s5aetvDdQl1eqIS5vb7lv0u",
+		organization: "org2",
+		role: "vendor",
+		isAdmin: true,
+	},
+];
+
 module.exports = { organizations, channels };
