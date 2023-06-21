@@ -9,15 +9,18 @@
 const { Gateway, Wallets } = require('fabric-network');
 const FabricCAServices = require('fabric-ca-client');
 const path = require('path');
+const fs = require('fs');
+
 const { buildCAClient, registerAndEnrollUser, enrollAdmin } = require('../../hyperledger/test-application/javascript/CAUtil.js');
-const { buildCCPOrg1, buildWallet } = require('../../hyperledger/test-application/javascript/AppUtil.js');
+const { buildCCPOrg1, buildCCPOrg2, buildWallet } = require('../../hyperledger/test-application/javascript/AppUtil.js');
 
 const channelName = 'mychannel';
 const chaincodeName = 'ledger';
 const mspOrg1 = 'Org1MSP';
+const mspOrg2 = 'Org1MSP';
 
-const walletPath = path.join(__dirname, 'wallet');
-const userId = 'appUser';
+const walletPath = path.join(__dirname, 'wallet','debug');
+const userId = 'debugUser';
 
 function prettyJSONString(inputString) {
 	return JSON.stringify(JSON.parse(inputString), null, 2);
@@ -70,29 +73,126 @@ function prettyJSONString(inputString) {
  * To see the SDK workings, try setting the logging to show on the console before running
  *        export HFC_LOGGING='{"debug":"console"}'
  */
+
+
+
+// god mode, delete it in release version
+async function debugReadAll(left = '', right = '') {
+	try {
+		const gateway = new Gateway();
+		const wallet = await buildWallet(Wallets, walletPath);
+		const ccp = buildCCPOrg1();
+		try {
+			await gateway.connect(ccp, {
+				wallet,
+				identity: userId,
+				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+			});
+			// Build a network instance based on the channel where the smart contract is deployed
+			const network = await gateway.getNetwork(channelName);
+
+			// Get the contract from the network.
+			const contract = network.getContract(chaincodeName);
+
+			try {
+				console.log('\n--> Evaluate Transaction: GetAssetsByRange, function use an open start and open end range to return assest1 to asset6');
+				let result = await contract.evaluateTransaction('GetAssetsByRange', left, right);
+				console.log(`*** Result: ${prettyJSONString(result.toString())}`);
+				return result;
+			} catch (error) {
+				console.log(`Error: \n    ${error}`);
+				throw error;
+			}
+		} finally {
+			gateway.disconnect();
+		}
+
+	} catch (error) {
+		console.error(`******** FAILED to run the application: ${error}`);
+		return `${error}`;
+	}
+}
+
+// async function createWallet(walletId){
+// 	const walletPath = path.join(__dirname, 'wallet',walletId);
+// 	const wallet = await buildWallet(Wallets, walletPath);
+	
+// 	return walletPath;
+// }
+
+async function registerUser(org, walletId){
+	try{
+		let ccp;
+		let ca;
+		if(org === mspOrg1){
+			ccp = buildCCPOrg1();
+			ca = 'ca.org1.example.com';
+		}
+		else{
+			ccp = buildCCPOrg2();
+			ca = 'ca.org2.example.com';
+		} 
+		const walletPath = path.join(__dirname, 'wallet', org);
+		const wallet = await buildWallet(Wallets, walletPath);
+		const caClient = buildCAClient(FabricCAServices, ccp, ca);
+		await registerAndEnrollUser(caClient, wallet, org, walletId, 'org1.department1');
+	} catch(error){
+		console.error(error);
+		throw error;
+	}
+	
+}
+
+// async function enroll(walletPath, walletId){
+// 	const ccp = buildCCPOrg1();
+// 	const wallet = await buildWallet(Wallets, walletPath);
+// 	const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
+
+// 	await enrollAdmin(caClient, wallet, mspOrg1);
+// 	await registerAndEnrollUser(caClient, wallet, mspOrg1, walletId.toString(), 'org1.department1');
+// }
+
 async function init() {
 
 	try {
 		// build an in memory object with the network configuration (also known as a connection profile)
-		const ccp = buildCCPOrg1();
+		const ccp1 = buildCCPOrg1();
 
 		// build an instance of the fabric ca services client based on
 		// the information in the network configuration
-		const caClient = buildCAClient(FabricCAServices, ccp, 'ca.org1.example.com');
+		const caClientOrg1 = buildCAClient(FabricCAServices, ccp1, 'ca.org1.example.com');
 
 		// setup the wallet to hold the credentials of the application user
 		const wallet = await buildWallet(Wallets, walletPath);
+		const walletPathOrg1 = path.join(__dirname, 'wallet','Org1MSP');
+		const walletOrg1 = await buildWallet(Wallets, walletPathOrg1);
 
 		// in a real application this would be done on an administrative flow, and only once
-		await enrollAdmin(caClient, wallet, mspOrg1);
+		await enrollAdmin(caClientOrg1, wallet, mspOrg1);
+		await enrollAdmin(caClientOrg1, walletOrg1, 'Org1MSP');
 
 		// in a real application this would be done only when a new user was required to be added
 		// and would be part of an administrative flow
-		await registerAndEnrollUser(caClient, wallet, mspOrg1, userId, 'org1.department1');
+		await registerAndEnrollUser(caClientOrg1, wallet, mspOrg1, userId, 'org1.department1');
+
+		// build an in memory object with the network configuration (also known as a connection profile)
+		const ccp2 = buildCCPOrg2();
+
+		// build an instance of the fabric ca services client based on
+		// the information in the network configuration
+		const caClientOrg2 = buildCAClient(FabricCAServices, ccp2, 'ca.org2.example.com');
+		// setup the wallet to hold the credentials of the application user
+		const walletPathOrg2 = path.join(__dirname, 'wallet','Org2MSP');
+		const walletOrg2 = await buildWallet(Wallets, walletPathOrg2);
+
+		await enrollAdmin(caClientOrg2, walletOrg2, 'Org2MSP');
+
+		
 
 		// Create a new gateway instance for interacting with the fabric network.
 		// In a real application this would be done as the backend server session is setup for
 		// a user that has been verified.
+
 		const gateway = new Gateway();
 
 		try {
@@ -100,7 +200,7 @@ async function init() {
 			// The user will now be able to create connections to the fabric network and be able to
 			// submit transactions and query. All transactions submitted by this gateway will be
 			// signed by this user using the credentials stored in the wallet.
-			await gateway.connect(ccp, {
+			await gateway.connect(ccp1, {
 				wallet,
 				identity: userId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
@@ -123,6 +223,7 @@ async function init() {
 			} catch (initError) {
 				// this is error is OK if we are rerunning this app without restarting
 				console.log(`******** initLedger failed :: ${initError}`);
+				throw initError;
 			}
 
 
@@ -140,15 +241,26 @@ async function init() {
 
 }
 
-async function createAsset(id, type, data) {
+
+
+
+async function createAsset(id, type, data, walletId, org) {
+	/**
+     * @param {String} id the primary key in blockchain
+	 * @param {String} type the document type
+	 * @param {String} data the data in blockchain, need stringfying at frontend.
+	 * @param {Number} walletId the identity used to add data in blockchain
+     * @param {String} org the org used to add data in blockchain
+    */
 	try {
 		const gateway = new Gateway();
+		const walletPath = path.join(__dirname, 'wallet', org);
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
 		try {
 			await gateway.connect(ccp, {
 				wallet,
-				identity: userId,
+				identity: walletId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
 
@@ -189,16 +301,17 @@ async function createAsset(id, type, data) {
 
 
 
-async function readAsset(id) {
+async function readAsset(id, walletId, org) {
 	try {
 		const gateway = new Gateway();
+		const walletPath = path.join(__dirname, 'wallet', org);
 		const wallet = await buildWallet(Wallets, walletPath);
 		const ccp = buildCCPOrg1();
 
 		try {
 			await gateway.connect(ccp, {
 				wallet,
-				identity: userId,
+				identity: walletId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
 
@@ -231,15 +344,23 @@ async function readAsset(id) {
 
 
 
-async function readRange(left = '', right = '') {
+async function readRange(left = '', right = '', walletId, org) {
 	try {
 		const gateway = new Gateway();
+		const walletPath = path.join(__dirname, 'wallet', org);
 		const wallet = await buildWallet(Wallets, walletPath);
-		const ccp = buildCCPOrg1();
+		let ccp;
+		if(org === mspOrg1){
+			ccp = buildCCPOrg1();
+		}
+		else{
+			ccp = buildCCPOrg2();
+		} 
+
 		try {
 			await gateway.connect(ccp, {
 				wallet,
-				identity: userId,
+				identity: walletId,
 				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
 			// Build a network instance based on the channel where the smart contract is deployed
@@ -269,13 +390,12 @@ async function readRange(left = '', right = '') {
 
 
 
-
-
-async function transfer(id, newVendorId) {
+/*
+async function transfer(id, newVendorId, ccp, wallet) {
 	try {
 		const gateway = new Gateway();
-		const wallet = await buildWallet(Wallets, walletPath);
-		const ccp = buildCCPOrg1();
+		//const wallet = await buildWallet(Wallets, walletPath);
+		//const ccp = buildCCPOrg1();
 		try {
 			await gateway.connect(ccp, {
 				wallet,
@@ -307,8 +427,8 @@ async function transfer(id, newVendorId) {
 		throw error;
 	}
 }
-
-
+*/
+/*
 async function execQuery(query) {
 	try {
 		const gateway = new Gateway();
@@ -345,8 +465,8 @@ async function execQuery(query) {
 		throw error;
 	}
 }
-
-
+*/
+/*
 async function execQueryWithPage(query, pageSize, bookmark) {
 	try {
 		const gateway = new Gateway();
@@ -383,6 +503,6 @@ async function execQueryWithPage(query, pageSize, bookmark) {
 		throw error;
 	}
 }
-
-module.exports = { init, createAsset, readAsset, readRange, };
+*/
+module.exports = { init, createAsset, readAsset, readRange, debugReadAll, registerUser};
 //module.exports = { init, createAsset, readAsset, readRange, transfer, execQuery, execQueryWithPage };

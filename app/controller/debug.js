@@ -22,8 +22,8 @@ class DebugController extends Controller {
 	}
 
 	async readAll() {
-		const ctx = this.ctx;
-		const res = await ctx.service.debug.readAll();
+		const { ctx } = this;
+		const res = await ctx.service.debug.readAll(ctx.request.body);
 		if (res) {
 			ctx.status = 200;
 		} else {
@@ -48,6 +48,19 @@ class DebugController extends Controller {
 	async init() {
 		const ctx = this.ctx;
 		const res = await ctx.service.debug.init();
+		if (res) {
+			ctx.status = 200;
+		} else {
+			ctx.status = 400;
+		}
+		ctx.body = res;
+		return;
+	}
+
+
+	async debugReadAll() {
+		const ctx = this.ctx;
+		const res = await ctx.service.debug.debugReadAll();
 		if (res) {
 			ctx.status = 200;
 		} else {
