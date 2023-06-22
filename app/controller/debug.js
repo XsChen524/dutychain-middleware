@@ -5,7 +5,7 @@ const Controller = require("egg").Controller;
 class DebugController extends Controller {
 	async index() {
 		const { ctx } = this;
-		ctx.body = 'hi, debugger';
+		ctx.body = "hi, debugger";
 	}
 
 	async create() {
@@ -48,7 +48,25 @@ class DebugController extends Controller {
 	async init() {
 		const ctx = this.ctx;
 		const res = await ctx.service.debug.init();
-		if (res) {
+		const admin1 = await ctx.service.auth.register({
+			name: "admin1",
+			password: "123456",
+			email: "admin@org1.hk",
+			organization: "Org1MSP",
+			role: "vendor",
+			isAdmin: true,
+			wallet: "admin",
+		});
+		const admin2 = await ctx.service.auth.register({
+			name: "admin2",
+			password: "123456",
+			email: "admin@org2.hk",
+			organization: "Org2MSP",
+			role: "vendor",
+			isAdmin: true,
+			wallet: "admin",
+		});
+		if (res && admin1 && admin2) {
 			ctx.status = 200;
 		} else {
 			ctx.status = 400;
@@ -56,7 +74,6 @@ class DebugController extends Controller {
 		ctx.body = res;
 		return;
 	}
-
 
 	async debugReadAll() {
 		const ctx = this.ctx;
