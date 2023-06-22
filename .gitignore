@@ -16,3 +16,4 @@ typings/
 app/blockchain/wallet/
 
 /.github
+.config/config.default.js
