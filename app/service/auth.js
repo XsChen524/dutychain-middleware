@@ -42,17 +42,32 @@ class AuthService extends Service {
 			await this.ctx.model.Auth.User.find().sort({ id: -1 })
 		)[0];
 		previousId = previousId === undefined ? 0 : previousId.id;
-		const user = await this.ctx.model.Auth.User.create({
-			id: previousId + 1,
-			name,
-			password: hashPassword,
-			email,
-			organization,
-			isAdmin,
-			role,
-			walletId,
-		});
-		return user;
+		try {
+			const user = await this.ctx.model.Auth.User.create({
+				id: previousId + 1,
+				name,
+				password: hashPassword,
+				email,
+				organization,
+				isAdmin,
+				role,
+				walletId,
+			});
+			if (!user) {
+				return undefined;
+			}
+			return {
+				id: user.id,
+				name: user.name,
+				email: user.email,
+				walletId: user.walletId,
+				organization: user.organization,
+				role: user.role,
+				isAdmin: user.isAdmin,
+			};
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	/**
