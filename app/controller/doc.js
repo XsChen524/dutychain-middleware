@@ -41,6 +41,47 @@ class DocController extends Controller {
 		// ctx.body = 'document';
 		return;
 	}
+
+	async queryDoc() {
+		const {ctx} = this;
+		const docs = await ctx.service.doc.find(ctx.request.body);
+		if (docs) {
+			ctx.status = 200;
+			ctx.body = {
+				success: true,
+				data: docs,
+			};
+		} else {
+			ctx.status = 400;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
+		}
+		// ctx.body = 'document';
+		return;
+	}
+
+	async validateDoc() {
+		const {ctx} = this;
+		const { id, walletId, org } = ctx.request.body;
+		const asset = await ctx.service.debug.read({ id, walletId, org });
+		if (asset) {
+			ctx.status = 200;
+			ctx.body = {
+				success: true,
+				data: asset,
+			};
+		} else {
+			ctx.status = 400;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
+		}
+		// ctx.body = 'document';
+		return;
+	}
 }
 
 module.exports = DocController;
