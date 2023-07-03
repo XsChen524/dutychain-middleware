@@ -8,7 +8,7 @@
 
 const { Gateway, Wallets } = require('fabric-network');
 const FabricCAServices = require('fabric-ca-client');
-const eccrypto = require('eccrypto');
+const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 
@@ -101,6 +101,7 @@ async function init(ctx) {
 		let adminInfoPath = path.resolve(__dirname, 'adminInfo.json');
 		let fileExists = fs.existsSync(adminInfoPath);
 		if (fileExists) {
+			console.log("already initialized");
 			return fs.readFileSync(adminInfoPath, 'utf8');
 		}
 
@@ -120,9 +121,14 @@ async function init(ctx) {
 			const OrgMSP = 'Org'+OrgName+'MSP'
 			const OrgEmail = 'org'+OrgName+'.example.com'
 			const username = 'Org' + OrgName + 'Admin'
-			const password = randomString(16);
+			const password = randomString(8);
 			const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
-			
+			const pubKeyPath = path.resolve(__dirname, '..',configJSON[i].PUBKEY_PATH);
+			const pubKey = fs.readFileSync(pubKeyPath,'utf-8')
+
+			//const privKeyPath = path.resolve(__dirname, '..',configJSON[i].PRIVKEY_PATH);
+			//const privKey = fs.readFileSync(privKeyPath,'utf-8')
+
 			const ccp = buildCCPOrg(ccpPath);
 			const caClientOrg = buildCAClient(FabricCAServices, ccp, 'ca.org'+OrgName+'.example.com');
 
@@ -149,10 +155,16 @@ async function init(ctx) {
 				isAdmin:true,
 				walletId:"admin",
 			});
+			console.log(password)
+			
+			let encrypted = crypto.publicEncrypt(pubKey, Buffer.from(password, 'utf-8'))
+			encrypted_passwords[OrgName] = encrypted.toString('hex');
 
-	
-			//encrypted_passwords[OrgName] = await eccrypto.encrypt(configJSON[i].pubKey, Buffer.from(password))
-			encrypted_passwords[OrgName] = password;
+			// Error data longer than mod means type error
+			//let decrypted = crypto.privateDecrypt(privKey,encrypted).toString('utf-8');
+			//console.log(decrypted)
+			
+			//encrypted_passwords[OrgName] = password;
 		}
 
 		adminInfoPath = path.resolve(__dirname, 'adminInfo.json');

@@ -1,10 +1,10 @@
 [
     {
         "NAME":1,
-        "pubKey":"11"
+        "PUBKEY_PATH":"pubKeys/Org1.pem"
     },
     {
         "NAME":2,
-        "pubKey":"22"
+        "PUBKEY_PATH":"pubKeys/Org2.pem"
     }
 ]
