@@ -94,7 +94,7 @@ async function registerUser(OrgName, walletId){
 }
 
 
-async function init() {
+async function init(ctx) {
 
 
 	try {
