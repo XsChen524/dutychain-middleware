@@ -10,7 +10,8 @@ class DocService extends Service {
 		 * @param {Object} data Get string from request body,
 		 * need stringfying at frontend.
 		 */
-		const { title, data, vendorId } = body;
+		console.log(body)
+		const { title, data, vendorId, walletId, org } = body;
 		const id = "0x000000000000000000000000000000000000000000000000" + randomString(16);
 		try {
 			const txn = await this.ctx.model.Doc.insertMany([{
@@ -28,7 +29,7 @@ class DocService extends Service {
 				hash,
 				vendorId,
 			};
-			await this.ctx.service.debug.create({ type: "doc", id, data: requestJson });
+			await this.ctx.service.debug.create({ type: "doc", id, data: requestJson, walletId, org });
 			return txn;
 		} catch (error) {
 			console.error(error);
@@ -43,7 +44,8 @@ class DocService extends Service {
 	}
 
 	async find() {
-		const txns = await this.ctx.model.Doc.find();
+		const { title, data, vendorId } = body;
+		const txns = await this.ctx.model.Doc.find({ title, data, vendorId });
 		if (!txns) {
 			return undefined;
 		}

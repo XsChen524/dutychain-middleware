@@ -4,10 +4,19 @@
  * @param {Egg.Application} app - egg application
  */
 module.exports = (app) => {
-	const { router, controller } = app;
+	const { router, controller, jwt } = app;
 	router.get("/", controller.home.index);
 
+	/**
+	 * Auth router group
+	 */
+	router.post("/auth/signup", controller.auth.register);
+	router.post("/auth/login", controller.auth.login);
+	router.get("/auth", jwt, controller.auth.index);
+	router.get("/auth/organization", jwt, controller.auth.getAllOrgs);
+
 	// Vendors
+	/*
 	router.get("/vendor", controller.vendor.getAllVendors);
 	router.post("/vendor", controller.vendor.createVendor);
 
@@ -23,8 +32,10 @@ module.exports = (app) => {
 	router.get("/txn", controller.txn.getAllTxns);
 	router.post("/txn", controller.txn.createTxn);
 
+	*/
+
 	// Register
-	router.post("/register", controller.register.register);
+	// router.post("/register", controller.register.register);
 
 	// Used for Debugging
 	router.get("/debug", controller.debug.index);
@@ -41,6 +52,7 @@ module.exports = (app) => {
 	router.post("/debug/debugReadAll", controller.debug.debugReadAll);
 
 	// Documents
+	// body = { title, data, vendorId, walletId, org }
 	router.get("/document", controller.doc.getDocList);
 	router.post("/document", controller.doc.uploadDoc);
 };

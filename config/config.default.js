@@ -29,11 +29,20 @@ module.exports = (appInfo) => {
 		allowMethods: "GET,HEAD,PUT,POST,DELETE,PATCH",
 	};
 
-	// add your user config here
+	config.jwt = {
+		secret: config.keys,
+		sign: {
+			expiresIn: 600000,
+		},
+	};
+
+	config.bcrypt = {
+		saltRounds: 10,
+	};
 
 	config.mongoose = {
 		client: {
-			url: "mongodb://localhost:27017/db_egg",
+			url: "mongodb://38.147.173.101/db_egg",
 			options: {
 				useUnifiedTopology: true,
 			},

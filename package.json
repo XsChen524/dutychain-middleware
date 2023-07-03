@@ -1,52 +1,49 @@
 {
-  "name": "dutychain-middleware",
-  "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "scripts": {
-    "dev": "egg-bin dev",
-    "start": "egg-scripts start --daemon --title=egg-server-dutychain-middleware",
-    "stop": "egg-scripts stop --title=egg-server-dutychain-middleware",
-    "debug": "egg-bin debug",
-    "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test",
-    "cov": "egg-bin cov",
-    "lint": "eslint .",
-    "ci": "npm run lint && npm run cov"
-  },
-  "egg": {
-    "declarations": true
-  },
-  "dependencies": {
-    "egg": "^3",
-    "egg-cors": "^2.2.3",
-    "egg-mongoose": "^3.3.1",
-    "egg-scripts": "^2",
-    "egg-sequelize": "^6.0.0",
-    "fabric-ca-client": "^2.2.18",
-    "fabric-network": "^2.2.18",
-    "moment": "^2.29.4",
-    "mysql2": "^3.3.2"
-  },
-  "devDependencies": {
-    "egg-bin": "^5",
-    "egg-ci": "^2",
-    "egg-mock": "^5",
-    "eslint": "^8",
-    "eslint-config-egg": "^12",
-    "eslint-plugin-sort-imports-es6-autofix": "^0.6.0"
-  },
-  "engines": {
-    "node": ">=16.0.0"
-  },
-  "ci": {
-    "version": "16, 18",
-    "type": "github"
-  },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "author": "",
-  "license": "MIT"
+	"name": "dutychain-middleware",
+	"version": "1.0.0",
+	"description": "",
+	"private": true,
+	"scripts": {
+		"dev": "egg-bin dev",
+		"start": "egg-scripts start --daemon --title=egg-server-dutychain-middleware",
+		"stop": "egg-scripts stop --title=egg-server-dutychain-middleware",
+		"debug": "egg-bin debug",
+		"seed": "seed -u 'mongodb://127.0.0.1:27017/db_egg' ./examples/seeds",
+		"test": "npm run lint -- --fix && npm run test-local",
+		"test-local": "egg-bin test",
+		"cov": "egg-bin cov",
+		"lint": "eslint .",
+		"ci": "npm run lint && npm run cov"
+	},
+	"egg": {
+		"declarations": true
+	},
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"egg": "^3",
+		"egg-cors": "^2.2.3",
+		"egg-jwt": "^3.1.7",
+		"egg-mongoose": "^3.3.1",
+		"egg-scripts": "^2",
+		"fabric-ca-client": "^2.2.18",
+		"fabric-network": "^2.2.18",
+		"moment": "^2.29.4"
+	},
+	"devDependencies": {
+		"egg-bin": "^5",
+		"egg-ci": "^2",
+		"egg-mock": "^5",
+		"eslint": "^8",
+		"eslint-config-egg": "^12",
+		"eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+		"mongo-seeding-cli": "^3.7.2"
+	},
+	"engines": {
+		"node": ">=16.0.0"
+	},
+	"author": "",
+	"license": "MIT",
+	"mdSeed": {
+		"seedersFolder": "./seeders"
+	}
 }
