@@ -60,6 +60,7 @@ class DocService extends Service {
 		}
 		return txns;
 	}
+
 }
 
 module.exports = DocService;

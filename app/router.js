@@ -48,8 +48,6 @@ module.exports = (app) => {
 	router.post("/debug/create", controller.debug.create);
 	router.get("/debug/init", controller.debug.init);
 	router.post("/debug/init", controller.debug.init);
-	router.get("/debug/debugReadAll", controller.debug.debugReadAll);
-	router.post("/debug/debugReadAll", controller.debug.debugReadAll);
 
 	// Documents
 	// body = { title, data, vendorId, walletId, org }

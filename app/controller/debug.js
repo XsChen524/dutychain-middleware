@@ -46,7 +46,7 @@ class DebugController extends Controller {
 	}
 
 	async init() {
-		const ctx = this.ctx;
+		const { ctx } = this;
 		const res = await ctx.service.debug.init();
 		if (res) {
 			ctx.status = 200;
