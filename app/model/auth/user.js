@@ -37,8 +37,8 @@ module.exports = (app) => {
 		},
 		walletId: {
 			type: String,
-			required: true
-		}
+			required: true,
+		},
 	});
 	return mongoose.model("User", UserSchema);
 };
