@@ -31,24 +31,41 @@ class AuthService extends Service {
 	 * @return {object} user object created
 	 */
 	async register(body) {
-		// const hash = bcrypt.hashSync(password, this.config.bcrypt.saltRounds);
-		const { name, password, email, organization, role } = body;
-		const walletId = await this.ctx.service.register.register(organization);
-		console.log(walletId);
+		const { name, password, email, organization, role, isAdmin, wallet } =
+			body;
+		const hashPassword = bcrypt.hashSync(password, this.config.bcrypt.saltRounds);
+		const walletId =
+			wallet || (await this.ctx.service.register.register(organization));
 		let previousId = (
 			await this.ctx.model.Auth.User.find().sort({ id: -1 })
 		)[0];
 		previousId = previousId === undefined ? 0 : previousId.id;
-		const user = await this.ctx.model.Auth.User.create({
-			id: previousId + 1,
-			name,
-			password,
-			email,
-			organization,
-			role,
-			walletId,
-		});
-		return user;
+		try {
+			const user = await this.ctx.model.Auth.User.create({
+				id: previousId + 1,
+				name,
+				password: hashPassword,
+				email,
+				organization,
+				isAdmin,
+				role,
+				walletId,
+			});
+			if (!user) {
+				return undefined;
+			}
+			return {
+				id: user.id,
+				name: user.name,
+				email: user.email,
+				walletId: user.walletId,
+				organization: user.organization,
+				role: user.role,
+				isAdmin: user.isAdmin,
+			};
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	/**
@@ -60,8 +77,9 @@ class AuthService extends Service {
 		const { name, password } = body;
 		const user = (await this.ctx.model.Auth.User.find({ name }))[0];
 		if (!user) return undefined;
-		if (password === user.password) {
-			const { id } = user;
+		const match = await this.ctx.compare(password, user.password);
+		if (match) {
+			const { id, walletId } = user;
 			const {
 				jwt: {
 					secret,
