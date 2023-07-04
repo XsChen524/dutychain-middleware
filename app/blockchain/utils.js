@@ -77,7 +77,7 @@ async function registerUser(OrgName, walletId){
 	try{
 		
 		const OrgMSP = 'Org'+OrgName+'MSP'
-		const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
+		const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
 		const ccp = buildCCPOrg(ccpPath);
 		const ca = 'ca.org'+OrgName+'.example.com';
 		const department = 'org'+OrgName+'.department1';
@@ -122,7 +122,8 @@ async function init(ctx) {
 			const OrgEmail = 'org'+OrgName+'.example.com'
 			const username = 'Org' + OrgName + 'Admin'
 			const password = randomString(8);
-			const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
+			const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
+			//const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
 			const pubKeyPath = path.resolve(__dirname, '..',configJSON[i].PUBKEY_PATH);
 			const pubKey = fs.readFileSync(pubKeyPath,'utf-8')
 
@@ -197,7 +198,7 @@ async function createAsset(id, type, data, walletId, OrgName) {
     */
 	try {
 		const OrgMSP = 'Org'+OrgName+'MSP'
-		const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
+		const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
 		const ccp = buildCCPOrg(ccpPath);
 
 		const walletPath = path.join(__dirname, 'wallet', OrgMSP);
@@ -252,7 +253,7 @@ async function createAsset(id, type, data, walletId, OrgName) {
 async function readAsset(id, walletId, OrgName) {
 	try {
 		const OrgMSP = 'Org'+OrgName+'MSP'
-		const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
+		const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
 		const ccp = buildCCPOrg(ccpPath);
 
 		const walletPath = path.join(__dirname, 'wallet', OrgMSP);
@@ -299,7 +300,7 @@ async function readRange(left = '', right = '', walletId, OrgName) {
 	try {
 		
 		const OrgMSP = 'Org'+OrgName+'MSP'
-		const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
+		const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
 		const ccp = buildCCPOrg(ccpPath);
 
 		const walletPath = path.join(__dirname, 'wallet', OrgMSP);

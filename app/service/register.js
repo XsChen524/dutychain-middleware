@@ -14,7 +14,7 @@ class RegisterService extends Service {
             
             //const walletId = randomString(128);
             const walletId = Date.now().toString();
-            registerUser(org,walletId);
+            registerUser(org.toString(),walletId);
 
             return walletId;
 

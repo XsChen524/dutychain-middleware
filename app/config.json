@@ -6,5 +6,9 @@
     {
         "NAME":2,
         "PUBKEY_PATH":"pubKeys/Org2.pem"
+    },
+    {
+        "NAME":3,
+        "PUBKEY_PATH":"pubKeys/Org3.pem"
     }
 ]
