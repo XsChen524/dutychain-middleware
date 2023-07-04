@@ -8,30 +8,65 @@
 
 see [egg docs][egg] for more detail.
 
-### Development
+# Steps
 
-```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
+## Install Hyperledger Network
+```
+git clone https://github.com/makhead/dutychain-backend.git
 ```
 
-### Deploy Middleware
+## Start Hyperledger Network
+Detailed Step can be viewed at https://github.com/makhead/dutychain-backend
 
+### 1. Setup config.json
+### 2. Generate Docker config files
+```bash
+$ ./configFile-generate.sh ./config.json
+```
+### 3. Setup configtx/configtx.yaml
+### 4. Setup compose/compose-test-net.yaml
+* modify the volume part
+* modify the depends_on part
+### 5. Start the network
+```bash
+$ ./network.sh up createChannel -c mychannel -s couchdb -ca -p ./config.json
+```
+### 6. Deploy Chaincode
+Please modify the policy (-ccep option) to situable policy 
+```bash
+$ ./network.sh deployCC -c mychannel -ccn ledger -ccp ../chaincode/ledger-doctype/ -ccl javascript -p ./config.json -ccep "OR('Org1MSP.peer','Org2MSP.peer','Org3MSP.peer')" 
+```
+
+## Start middleware
+
+### 1. Set up connection profile (ccp)
+Copy the ccp of all organizations in dutychain-backend/hyperledger/test-network/organizations/peerorganizations/*Org name*/ to directory <B>dutychain-middle/app/ccp</B>
+
+### 2. Generate Public Private RSA Key Pair
+Generate the key pair for each organization for initial admin account password encrytion
+```bash
+$ cd app/pubKeys
+$ ./generateKey.sh 1
+$ ./generateKey.sh 2
+$ ./generateKey.sh 3
+```
+
+### 3. Set up config.json
+set up config.json in directory dutychain-middle/app/ 
+
+### 4. Start middleware
 ```bash
 $ npm start
-$ npm stop
 ```
 
-### Start Hyperledger Network
-* network logs are located at ~/logs
+# CleanUps
+
+## backend
 ```bash
-$ cd hyperledger/test-network
-$ ./network.sh up createChannel -c mychannel -s couchdb -ca
-$ ./network.sh deployCC -ccn ledger -ccp ../chaincode/ledger-doctype/ -ccl javascript -ccep "OR('Org1MSP.peer','Org2MSP.peer')"
+./network.sh down -p ./config.json
 ```
 
-### CleanUps
+## middleware
 ```bash
 # clean up logs
 $ cd ~/logs
@@ -44,6 +79,14 @@ $ ./network.sh down
 # clean up wallets
 $ cd app/blockchain
 $ rm -rf wallet
+
+# clean up admin initialize account passwords
+$ cd app/blockchain
+$ rm adminInfo.json
+
+# clean up admin initialize account passwords
+$ cd app/pubKeys
+$ ./clearKey.sh
 
 # drop database schema
 $ mongosh
@@ -63,42 +106,10 @@ Example:
 ```bash
 $ curl --header "Content-Type: application/json" --request POST localhost:7001/debug/init
 ```
-<img src="img/debug.png">
-
-### debugReadAll 
-<B>read all in using admin identity</B>
-<B> for debug usage only, don't call this</B>
-Get all assets in the network, no identity(wallet) is required.
-
-<B>No paramters are required</B>
-
-Example:
-```bash
-curl --header "Content-Type: application/json" --request POST localhost:7001/debug/debugReadAll
-```
-<img src="img/debugReadAll.png">
-
-### Register
-create an indentity, require to input <B>{org}</B>, return walletID 
-
-```bash
-curl --header "Content-Type: application/json" --request POST localhost:7001/register/
-```
-<img src="img/register.png">
 
 
 
 
-### Create
-create an asset in hyperledger, input <B>{id, type, data, walletId, org}</B> in JSON format, return the result that added in blockchain.
-
-<img src="img/create.png">
-
-
-### Read
-create an asset in hyperledger, input <B>{id, walletId, org}</B> in JSON format, return the result that added in blockchain.
-
-<
 ### npm scripts
 
 - Use `npm run lint` to check code style.
