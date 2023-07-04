@@ -31,13 +31,11 @@ class AuthService extends Service {
 	 * @return {object} user object created
 	 */
 	async register(body) {
-		// const hash = bcrypt.hashSync(password, this.config.bcrypt.saltRounds);
 		const { name, password, email, organization, role, isAdmin, wallet } =
 			body;
-		const hashPassword = await this.ctx.genHash(password);
+		const hashPassword = bcrypt.hashSync(password, this.config.bcrypt.saltRounds);
 		const walletId =
 			wallet || (await this.ctx.service.register.register(organization));
-		console.log(walletId);
 		let previousId = (
 			await this.ctx.model.Auth.User.find().sort({ id: -1 })
 		)[0];
@@ -96,7 +94,7 @@ class AuthService extends Service {
 				secret,
 				{ expiresIn }
 			); // Token generation, expires in 7 days
-			return { id, name, walletId, token };
+			return { id, name, token };
 		}
 	}
 }
