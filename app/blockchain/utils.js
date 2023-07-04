@@ -105,7 +105,7 @@ async function init(ctx) {
 			return fs.readFileSync(adminInfoPath, 'utf8');
 		}
 
-		const configPath = path.resolve(__dirname, '..' ,'config.json');
+		const configPath = path.resolve(__dirname, '..', 'pubKeys','config.json');
 		fileExists = fs.existsSync(configPath);
 		if (!fileExists) {
 			throw new Error(`no such file or directory: ${configPath}`);
@@ -124,7 +124,7 @@ async function init(ctx) {
 			const password = randomString(8);
 			const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
 			//const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
-			const pubKeyPath = path.resolve(__dirname, '..',configJSON[i].PUBKEY_PATH);
+			const pubKeyPath = path.resolve(__dirname, '..','pubKeys',configJSON[i].PUBKEY_PATH);
 			const pubKey = fs.readFileSync(pubKeyPath,'utf-8')
 
 			//const privKeyPath = path.resolve(__dirname, '..',configJSON[i].PRIVKEY_PATH);

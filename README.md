@@ -52,7 +52,7 @@ $ ./generateKey.sh 3
 ```
 
 ### 3. Set up config.json
-set up config.json in directory dutychain-middle/app/ 
+set up config.json in directory dutychain-middle/app/pubKeys/
 
 ### 4. Start middleware
 ```bash
@@ -74,7 +74,7 @@ $ rm -rf *
 
 # clean up hyperledger network
 $ cd hyperledger/test-network
-$ ./network.sh down
+$ ./network.sh down -p ./config.json
 
 # clean up wallets
 $ cd app/blockchain
