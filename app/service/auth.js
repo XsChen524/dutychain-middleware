@@ -33,7 +33,7 @@ class AuthService extends Service {
 	async register(body) {
 		const { name, password, email, organization, role, isAdmin, wallet } =
 			body;
-		const hashPassword = bcrypt.hashSync(password, this.config.bcrypt.saltRounds);
+		const hashPassword = await this.ctx.genHash(password);;
 		const walletId =
 			wallet || (await this.ctx.service.register.register(organization));
 		let previousId = (
