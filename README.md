@@ -72,10 +72,6 @@ $ npm start
 $ cd ~/logs
 $ rm -rf *
 
-# clean up hyperledger network
-$ cd hyperledger/test-network
-$ ./network.sh down -p ./config.json
-
 # clean up wallets
 $ cd app/blockchain
 $ rm -rf wallet
