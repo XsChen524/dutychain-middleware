@@ -61,7 +61,7 @@ class AuthService extends Service {
 		const user = (await this.ctx.model.Auth.User.find({ name }))[0];
 		if (!user) return undefined;
 		if (password === user.password) {
-			const { id, walletId } = user;
+			const { id } = user;
 			const {
 				jwt: {
 					secret,
@@ -76,7 +76,7 @@ class AuthService extends Service {
 				secret,
 				{ expiresIn }
 			); // Token generation, expires in 7 days
-			return { id, name, walletId, token };
+			return { id, name, token };
 		}
 	}
 }

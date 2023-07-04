@@ -52,8 +52,8 @@ module.exports = (app) => {
 
 	// Documents
 	// body = { title, data, vendorId, walletId, org }
-	router.get("/document", controller.doc.getDocList);
-	router.post("/document", controller.doc.uploadDoc);
-	router.post("/document/query", controller.doc.queryDoc);
-	router.post("/document/validate", controller.doc.validateDoc);
+	router.get("/document", jwt, controller.doc.getDocList);
+	router.post("/document", jwt, controller.doc.uploadDoc);
+	router.post("/document/query", jwt, controller.doc.queryDoc);
+	router.post("/document/validate", jwt, controller.doc.validateDoc);
 };
