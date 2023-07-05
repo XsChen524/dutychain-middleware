@@ -2,11 +2,46 @@
 
 const Service = require("egg").Service;
 
-class AuthService extends Service {
+class AdministrationService extends Service {
 	async getOrganizations() {
 		try {
 			const orgs = await this.ctx.model.Auth.Organization.find();
 			return orgs;
+		} catch (e) {
+			console.error(e);
+		}
+	}
+
+	/**
+	 * Find all users in a specific organization
+	 * @param {string} orgName Organization name
+	 * @return {object[]} user[]
+	 */
+	async findUsersByOrg(orgName) {
+		try {
+			let users = await this.ctx.model.Auth.User.find({
+				organization: orgName,
+			});
+
+			/**
+			 * Prepare users info sync
+			 */
+			users = await (async (users) => {
+				const filteredUserArr = [];
+				users.forEach((user) => {
+					filteredUserArr.push({
+						id: user.id,
+						name: user.name,
+						email: user.email,
+						organization: user.organization,
+						role: user.role,
+						isAdmin: user.isAdmin,
+					});
+				});
+				return filteredUserArr;
+			})(users);
+
+			return users;
 		} catch (e) {
 			console.error(e);
 		}
@@ -67,36 +102,6 @@ class AuthService extends Service {
 			console.error(e);
 		}
 	}
-
-	/**
-	 * User login, token signing after successfully logged in
-	 * @param {object} body ctx.request.body
-	 * @return {object} {email, token}
-	 */
-	async loginByName(body) {
-		const { name, password } = body;
-		const user = (await this.ctx.model.Auth.User.find({ name }))[0];
-		if (!user) return undefined;
-		const match = await this.ctx.compare(password, user.password);
-		if (match) {
-			const { id, name, email, organization, role, isAdmin } = user;
-			const {
-				jwt: {
-					secret,
-					sign: { expiresIn },
-				},
-			} = this.app.config; // Load jwt options from config
-			const token = this.app.jwt.sign(
-				{
-					id,
-					iat: new Date().valueOf(),
-				},
-				secret,
-				{ expiresIn }
-			); // Token generation, expires in 7 days
-			return { id, name, email, organization, role, isAdmin, token };
-		}
-	}
 }
 
-module.exports = AuthService;
+module.exports = AdministrationService;
