@@ -8,7 +8,7 @@
 		"start": "egg-scripts start --daemon --title=egg-server-dutychain-middleware",
 		"stop": "egg-scripts stop --title=egg-server-dutychain-middleware",
 		"debug": "egg-bin debug",
-		"seed": "seed -u 'mongodb://127.0.0.1:27017/db_egg' ./examples/seeds",
+		"seed": "seed -u 'mongodb://127.0.0.1:27017/db_egg_1' ./examples/seeds",
 		"test": "npm run lint -- --fix && npm run test-local",
 		"test-local": "egg-bin test",
 		"cov": "egg-bin cov",
