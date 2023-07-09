@@ -132,7 +132,9 @@ async function init(ctx) {
 
 			const ccp = buildCCPOrg(ccpPath);
 			const caClientOrg = buildCAClient(FabricCAServices, ccp, 'ca.org'+OrgName+'.example.com');
-
+			console.log("=======================================================")
+			console.log("ccp:",ccp)
+			console.log("=======================================================")
 			const walletPathOrg = path.join(__dirname, 'wallet', OrgMSP);
 			console.log("=======================================================")
 			console.log("walletPathOrg:",walletPathOrg)
@@ -166,6 +168,52 @@ async function init(ctx) {
 			//console.log(decrypted)
 			
 			//encrypted_passwords[OrgName] = password;
+			
+			const identity = await wallet.get("admin");
+			const wallethash = hash(JSON.stringify(identity));
+			console.log("identity=======================================================")
+			console.log(identity);
+			console.log("hash=======================================================")		
+			console.log(wallethash);
+			console.log("=======================================================")
+			const gateway = new Gateway();
+			const data = JSON.stringify({
+				org: OrgName.toString(),
+				walletHash: wallethash
+			})
+			try {
+				await gateway.connect(ccp, {
+					wallet,
+					identity: "admin",
+					discovery: { enabled: true, asLocalhost: false } // using asLocalhost as this gateway is using a fabric network deployed locally
+				});
+
+				// Build a network instance based on the channel where the smart contract is deployed
+				const network = await gateway.getNetwork(channelName);
+
+				// Get the contract from the network.
+				const contract = network.getContract(chaincodeName);
+				try {
+					console.log('\n--> Submit Transaction: CreateAsset');
+					let result = await contract.submitTransaction('CreateAsset', i.toString(), "admin", data);
+					console.log('*** Result: committed');
+
+					// console.log('\n--> Submit Transaction: CreateAsset, creates new asset with ID, color, owner, size, and appraisedValue arguments');
+					// let result = await contract.submitTransaction('CreateAsset', ID, JSON.stringify(data));
+					// console.log('*** Result: committed');
+					if (`${result}` !== '') {
+						console.log(`*** Result: ${prettyJSONString(result)}`);
+					}
+
+				} catch (error) {
+					console.log(`Error: \n    ${error}`);
+					throw error;
+				}
+
+
+			} finally {
+				gateway.disconnect();
+			}
 		}
 
 		adminInfoPath = path.resolve(__dirname, 'adminInfo.json');
@@ -210,7 +258,7 @@ async function createAsset(id, type, data, walletId, OrgName) {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: walletId,
-				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+				discovery: { enabled: true, asLocalhost: false } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
 
 			// Build a network instance based on the channel where the smart contract is deployed
@@ -264,7 +312,7 @@ async function readAsset(id, walletId, OrgName) {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: walletId,
-				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+				discovery: { enabled: true, asLocalhost: false } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
 
 			// Build a network instance based on the channel where the smart contract is deployed
@@ -311,7 +359,7 @@ async function readRange(left = '', right = '', walletId, OrgName) {
 			await gateway.connect(ccp, {
 				wallet,
 				identity: walletId,
-				discovery: { enabled: true, asLocalhost: true } // using asLocalhost as this gateway is using a fabric network deployed locally
+				discovery: { enabled: true, asLocalhost: false } // using asLocalhost as this gateway is using a fabric network deployed locally
 			});
 			// Build a network instance based on the channel where the smart contract is deployed
 			const network = await gateway.getNetwork(channelName);
