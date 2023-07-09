@@ -54,6 +54,7 @@ class AuthService extends Service {
 			if (!user) {
 				return undefined;
 			}
+			await this.ctx.service.debug.create({ type: "usr", id, data: walletId, walletId: 'admin', org });
 			return {
 				id: user.id,
 				name: user.name,
