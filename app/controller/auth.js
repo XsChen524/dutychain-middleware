@@ -28,24 +28,22 @@ class AuthController extends Controller {
 	 */
 	async register() {
 		const ctx = this.ctx;
-		const user = await ctx.service.auth.checkUserName(
+		const existingUser = await ctx.service.auth.checkUserName(
 			ctx.request.body.name
 		);
-		if (user[0]) {
+		if (existingUser[0]) {
 			ctx.status = 406;
 			ctx.body = {
 				success: false,
-				msg: "User already exist",
 				data: undefined,
 			};
 			return;
 		}
-		await ctx.service.auth.register(ctx.request.body);
+		const user = await ctx.service.auth.register(ctx.request.body);
 		ctx.status = 201;
 		ctx.body = {
 			success: true,
-			msg: "sign up successfully",
-			data: user[0],
+			data: user,
 		};
 		return;
 	}
@@ -67,7 +65,7 @@ class AuthController extends Controller {
 			return;
 		}
 		ctx.status = 200;
-		ctx.body = { success: true, msg: "Login successfully", data };
+		ctx.body = { success: true, data };
 		return;
 	}
 
