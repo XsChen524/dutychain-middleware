@@ -54,7 +54,8 @@ class DebugService extends Service {
                 console.log("ID cannot be empty");
                 throw new Error("ID cannot be empty");
             }
-            const res = readAsset(id, walletId.toString(), org);
+            let res = await readAsset(id, walletId.toString(), org);
+            res = JSON.parse(res.toString());
             return res;
         } catch (error) {
             console.error(error);
