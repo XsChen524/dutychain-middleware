@@ -181,6 +181,10 @@ async function init(ctx) {
 				org: OrgName.toString(),
 				walletHash: wallethash
 			})
+			console.log("data===================================================");
+			console.log(data);
+			console.log("i=====================================================");
+			console.log(i.toString());
 			try {
 				await gateway.connect(ccp, {
 					wallet,

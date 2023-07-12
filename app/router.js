@@ -35,7 +35,7 @@ module.exports = (app) => {
 	*/
 
 	// Register
-	// router.post("/register", controller.register.register);
+	router.post("/register", controller.register.register);
 
 	// Used for Debugging
 	router.get("/debug", controller.debug.index);
