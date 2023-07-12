@@ -4,7 +4,7 @@
 	"description": "",
 	"private": true,
 	"scripts": {
-		"dev": "egg-bin dev",
+		"dev": "egg-bin dev --port 7010",
 		"start": "egg-scripts start --daemon --title=egg-server-dutychain-middleware",
 		"stop": "egg-scripts stop --title=egg-server-dutychain-middleware",
 		"debug": "egg-bin debug",

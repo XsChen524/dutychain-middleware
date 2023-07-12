@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 exports.buildCCPOrg = (ccpPath) => {
 	// load the common connection configuration file
-	
+
 	const fileExists = fs.existsSync(ccpPath);
 	if (!fileExists) {
 		throw new Error(`no such file or directory: ${ccpPath}`);
 	}
-	const contents = fs.readFileSync(ccpPath, 'utf8');
+	const contents = fs.readFileSync(ccpPath, "utf8");
 
 	// build a JSON object from the file contents
 	const ccp = JSON.parse(contents);
@@ -25,15 +25,24 @@ exports.buildCCPOrg = (ccpPath) => {
 	return ccp;
 };
 
-
 exports.buildCCPOrg1 = () => {
 	// load the common connection configuration file
-	const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'connection-org1.json');
+	const ccpPath = path.resolve(
+		__dirname,
+		"..",
+		"..",
+		"hyperledger",
+		"test-network",
+		"organizations",
+		"peerOrganizations",
+		"org1.example.com",
+		"connection-org1.json"
+	);
 	const fileExists = fs.existsSync(ccpPath);
 	if (!fileExists) {
 		throw new Error(`no such file or directory: ${ccpPath}`);
 	}
-	const contents = fs.readFileSync(ccpPath, 'utf8');
+	const contents = fs.readFileSync(ccpPath, "utf8");
 
 	// build a JSON object from the file contents
 	const ccp = JSON.parse(contents);
@@ -44,13 +53,22 @@ exports.buildCCPOrg1 = () => {
 
 exports.buildCCPOrg2 = () => {
 	// load the common connection configuration file
-	const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network',
-		'organizations', 'peerOrganizations', 'org2.example.com', 'connection-org2.json');
+	const ccpPath = path.resolve(
+		__dirname,
+		"..",
+		"..",
+		"hyperledger",
+		"test-network",
+		"organizations",
+		"peerOrganizations",
+		"org2.example.com",
+		"connection-org2.json"
+	);
 	const fileExists = fs.existsSync(ccpPath);
 	if (!fileExists) {
 		throw new Error(`no such file or directory: ${ccpPath}`);
 	}
-	const contents = fs.readFileSync(ccpPath, 'utf8');
+	const contents = fs.readFileSync(ccpPath, "utf8");
 
 	// build a JSON object from the file contents
 	const ccp = JSON.parse(contents);
@@ -67,7 +85,7 @@ exports.buildWallet = async (Wallets, walletPath) => {
 		console.log(`Built a file system wallet at ${walletPath}`);
 	} else {
 		wallet = await Wallets.newInMemoryWallet();
-		console.log('Built an in memory wallet');
+		console.log("Built an in memory wallet");
 	}
 	return wallet;
 };
@@ -77,6 +95,5 @@ exports.prettyJSONString = (inputString) => {
 		return JSON.stringify(JSON.parse(inputString), null, 2);
 	}
 
-		return inputString;
-
+	return inputString;
 };

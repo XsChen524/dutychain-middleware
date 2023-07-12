@@ -17,4 +17,4 @@ app/blockchain/wallet/
 
 /.github
 config/config.default.js
-/.pubKeys/*.pem
+app/pubKeys/*.pem

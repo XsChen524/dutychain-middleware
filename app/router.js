@@ -10,29 +10,17 @@ module.exports = (app) => {
 	/**
 	 * Auth router group
 	 */
-	router.post("/auth/signup", controller.auth.register);
-	router.post("/auth/login", controller.auth.login);
-	router.get("/auth", jwt, controller.auth.index);
-	router.get("/auth/organization", jwt, controller.auth.getAllOrgs);
-
-	// Vendors
-	/*
-	router.get("/vendor", controller.vendor.getAllVendors);
-	router.post("/vendor", controller.vendor.createVendor);
-
-	// Projects
-	router.get("/project", controller.project.getAllProjects);
-	router.post("/project", controller.project.createProject);
-
-	// Responsibilities
-	router.get("/meta", controller.meta.getAllResponsibilities);
-	router.post("/meta", controller.meta.createResponsibility);
-
-	// Transactions
-	router.get("/txn", controller.txn.getAllTxns);
-	router.post("/txn", controller.txn.createTxn);
-
-	*/
+	router.post("/auth/login", controller.auth.login.login);
+	router.post("/auth/signup", controller.auth.administration.register);
+	router.get(
+		"/auth/organization",
+		jwt,
+		controller.auth.administration.getAllOrgs
+	);
+	router.get(
+		"/admin/:orgName/user",
+		controller.auth.administration.getUsersByOrg
+	);
 
 	// Register
 	router.post("/register", controller.register.register);
