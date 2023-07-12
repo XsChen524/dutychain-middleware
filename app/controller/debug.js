@@ -36,11 +36,6 @@ class DebugController extends Controller {
 	async read() {
 		const { ctx } = this;
 		const res = await ctx.service.debug.read(ctx.request.body);
-		if (!res) {
-			ctx.status = 406;
-		} else {
-			ctx.status = 201;
-		}
 		ctx.body = res;
 		return;
 	}

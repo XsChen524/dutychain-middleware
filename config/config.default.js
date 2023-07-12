@@ -32,7 +32,7 @@ module.exports = (appInfo) => {
 	config.jwt = {
 		secret: config.keys,
 		sign: {
-			expiresIn: 600000,
+			expiresIn: 1209600000, // millsecond
 		},
 	};
 

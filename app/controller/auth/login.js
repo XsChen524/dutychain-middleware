@@ -10,11 +10,9 @@ class AuthController extends Controller {
 	async login() {
 		const ctx = this.ctx;
 		const data = await ctx.service.auth.login.loginByName(ctx.request.body);
-		console.log(data);
 		if (!data) {
 			ctx.body = {
 				success: false,
-				msg: "Wrong username or password",
 				data: undefined,
 			};
 			return;

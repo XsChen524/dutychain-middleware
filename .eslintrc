@@ -15,6 +15,7 @@
 				"ignoreMemberSort": false,
 				"memberSyntaxSortOrder": ["all", "single", "multiple", "none"]
 			}
-		]
+		],
+		"no-trailing-spaces": "off"
 	}
 }

@@ -33,8 +33,8 @@ function randomString(len) {
 		.slice(0, len);
 }
 
-function hash(str){
-	return crypto.createHash('sha256').update(str).digest('hex');
+function hash(str) {
+	return crypto.createHash("sha256").update(str).digest("hex");
 }
 
 module.exports = { stringToNumberArray, strToStrArray, randomString, hash };

@@ -7,14 +7,12 @@ class AdministrationController extends Controller {
 		const ctx = this.ctx;
 		const orgs = await ctx.service.auth.administration.getOrganizations();
 		if (!orgs) {
-			ctx.status = 400;
 			ctx.body = {
 				success: false,
 				data: undefined,
 			};
 			return;
 		}
-		ctx.status = 200;
 		ctx.body = {
 			success: true,
 			data: orgs,
@@ -25,9 +23,7 @@ class AdministrationController extends Controller {
 	async getUsersByOrg() {
 		const { ctx } = this;
 		const orgName = ctx.params.orgName;
-		const users = await ctx.service.auth.administration.findUsersByOrg(
-			orgName
-		);
+		const users = await ctx.service.auth.administration.findUsersByOrg(orgName);
 		if (!users) {
 			ctx.body = {
 				success: false,
@@ -48,22 +44,15 @@ class AdministrationController extends Controller {
 	 */
 	async register() {
 		const ctx = this.ctx;
-		const existingUser =
-			await ctx.service.auth.administration.checkUserName(
-				ctx.request.body.name
-			);
+		const existingUser = await ctx.service.auth.administration.checkUserName(ctx.request.body.name);
 		if (existingUser[0]) {
-			ctx.status = 406;
 			ctx.body = {
 				success: false,
 				data: undefined,
 			};
 			return;
 		}
-		const user = await ctx.service.auth.administration.register(
-			ctx.request.body
-		);
-		ctx.status = 201;
+		const user = await ctx.service.auth.administration.register(ctx.request.body);
 		ctx.body = {
 			success: true,
 			data: user,

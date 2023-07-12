@@ -66,14 +66,11 @@ class AdministrationService extends Service {
 	 * @return {object} user object created
 	 */
 	async register(body) {
-		const { name, password, email, organization, role, isAdmin, wallet } =
-			body;
+		const { name, password, email, organization, role, isAdmin, wallet } = body;
+
 		const hashPassword = await this.ctx.genHash(password);
-		const walletId =
-			wallet || (await this.ctx.service.register.register(organization));
-		let previousId = (
-			await this.ctx.model.Auth.User.find().sort({ id: -1 })
-		)[0];
+		const walletId = wallet || (await this.ctx.service.auth.fabric.registerInOrganization(organization));
+		let previousId = (await this.ctx.model.Auth.User.find().sort({ id: -1 }))[0];
 		previousId = previousId === undefined ? 0 : previousId.id;
 		try {
 			const user = await this.ctx.model.Auth.User.create({

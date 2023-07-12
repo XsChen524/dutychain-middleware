@@ -12,15 +12,10 @@ module.exports = (app) => {
 	 */
 	router.post("/auth/login", controller.auth.login.login);
 	router.post("/auth/signup", controller.auth.administration.register);
-	router.get(
-		"/auth/organization",
-		jwt,
-		controller.auth.administration.getAllOrgs
-	);
-	router.get(
-		"/admin/:orgName/user",
-		controller.auth.administration.getUsersByOrg
-	);
+	router.get("/auth/organization", jwt, controller.auth.administration.getAllOrgs);
+	router.get("/admin/:orgName/user", controller.auth.administration.getUsersByOrg);
+
+	router.get("/document", controller.document.document.index);
 
 	// Register
 	router.post("/register", controller.register.register);
@@ -39,6 +34,6 @@ module.exports = (app) => {
 
 	// Documents
 	// body = { title, data, vendorId, walletId, org }
-	router.get("/document", controller.doc.getDocList);
+	// router.get("/document", controller.doc.getDocList);
 	router.post("/document", controller.doc.uploadDoc);
 };

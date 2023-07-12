@@ -1,7 +1,7 @@
 "use strict";
 
 const Service = require("egg").Service;
-const crypto = require('crypto');
+const crypto = require("crypto");
 const { randomString } = require("../utils/utils");
 
 class DocService extends Service {
@@ -10,21 +10,21 @@ class DocService extends Service {
 		 * @param {Object} data Get string from request body,
 		 * need stringfying at frontend.
 		 */
-		console.log(body)
+		console.log(body);
 		const { title, data, vendorId, walletId, org } = body;
 		const id = "0x000000000000000000000000000000000000000000000000" + randomString(16);
 		try {
-			const txn = await this.ctx.model.Doc.insertMany([{
-				id,
-				title,
-				data,
-				vendorId: Number(vendorId),
-			}]);
+			const txn = await this.ctx.model.Doc.insertMany([
+				{
+					id,
+					title,
+					data,
+					vendorId: Number(vendorId),
+				},
+			]);
 
 			const str = JSON.stringify({ title, data, vendorId });
-			const hash = crypto.createHmac('sha256', '123456')
-				.update(str, 'utf8')
-				.digest('hex');
+			const hash = crypto.createHmac("sha256", "123456").update(str, "utf8").digest("hex");
 			const requestJson = {
 				hash,
 				vendorId,
@@ -38,12 +38,12 @@ class DocService extends Service {
 			} catch (error) {
 				console.error(error);
 				console.log("Auto deletion failed, please delete this document manually.");
-			};
+			}
 			return undefined;
 		}
 	}
 
-	async find() {
+	async find(body) {
 		const { title, data, vendorId } = body;
 		const txns = await this.ctx.model.Doc.find({ title, data, vendorId });
 		if (!txns) {
@@ -60,7 +60,6 @@ class DocService extends Service {
 		}
 		return txns;
 	}
-
 }
 
 module.exports = DocService;
