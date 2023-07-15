@@ -1,14 +1,17 @@
 [
     {
         "NAME":1,
+        "DOMAIN":"org1.testing.com",
         "PUBKEY_PATH":"Org1.pem"
     },
     {
-        "NAME":2,
-        "PUBKEY_PATH":"Org2.pem"
+        "NAME":"ABC",
+        "DOMAIN":"orgABC.example.com",
+        "PUBKEY_PATH":"OrgABC.pem"
     },
     {
-        "NAME":3,
-        "PUBKEY_PATH":"Org3.pem"
+        "NAME":"DEF",
+        "DOMAIN":"orgDEF.example.com",
+        "PUBKEY_PATH":"OrgDEF.pem"
     }
 ]

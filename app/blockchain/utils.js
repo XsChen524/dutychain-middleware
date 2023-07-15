@@ -75,17 +75,33 @@ function prettyJSONString(inputString) {
 async function registerUser(OrgName, walletId){
 
 	try{
+		const configPath = path.resolve(__dirname, '..', 'pubKeys','config.json');
+		const fileExists = fs.existsSync(configPath);
+		if (!fileExists) {
+			throw new Error(`no such file or directory: ${configPath}`);
+		}
+		const configContent = fs.readFileSync(configPath, 'utf8');
+		// build a JSON object from the file contents
+		const configJSON = JSON.parse(configContent);
+		const length = configJSON.length;
+		let Domain = "org."+OrgName+".example.com"
+		for(var i = 0; i<length; i++){
+			if (configJSON[i].NAME === OrgName){
+				Domain = configJSON[i].DOMAIN
+				break;
+			}
+		}
 		
 		const OrgMSP = 'Org'+OrgName+'MSP'
 		const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
 		const ccp = buildCCPOrg(ccpPath);
-		const ca = 'ca.org'+OrgName+'.example.com';
-		const department = 'org'+OrgName+'.department1';
+		const ca = 'ca.'+Domain;
+		//const department = 'org'+OrgName+'.department1';
 
 		const walletPath = path.join(__dirname, 'wallet', OrgMSP);
 		const wallet = await buildWallet(Wallets, walletPath);
 		const caClient = buildCAClient(FabricCAServices, ccp, ca);
-		await registerAndEnrollUser(caClient, wallet, OrgMSP, walletId, department);
+		await registerAndEnrollUser(caClient, wallet, OrgMSP, walletId);
 	} catch(error){
 		console.error(error);
 		throw error;
@@ -119,11 +135,14 @@ async function init(ctx) {
 		for(var i = 0; i<length; i++){
 			const OrgName = configJSON[i].NAME
 			const OrgMSP = 'Org'+OrgName+'MSP'
-			const OrgEmail = 'org'+OrgName+'.example.com'
+			const Domain = configJSON[i].DOMAIN
+			
+			console.log("=======================================================")
+			console.log("Domain:",Domain)
+			console.log("=======================================================")
 			const username = 'Org' + OrgName + 'Admin'
 			const password = randomString(8);
 			const ccpPath = path.resolve(__dirname, '..', 'ccp', 'connection-org'+OrgName+'.json');
-			//const ccpPath = path.resolve(__dirname, '..', '..','hyperledger','test-network', 'organizations', 'peerOrganizations', OrgEmail, 'connection-org'+OrgName+'.json');
 			const pubKeyPath = path.resolve(__dirname, '..','pubKeys',configJSON[i].PUBKEY_PATH);
 			const pubKey = fs.readFileSync(pubKeyPath,'utf-8')
 
@@ -131,7 +150,7 @@ async function init(ctx) {
 			//const privKey = fs.readFileSync(privKeyPath,'utf-8')
 
 			const ccp = buildCCPOrg(ccpPath);
-			const caClientOrg = buildCAClient(FabricCAServices, ccp, 'ca.org'+OrgName+'.example.com');
+			const caClientOrg = buildCAClient(FabricCAServices, ccp, 'ca.'+Domain);
 			console.log("=======================================================")
 			console.log("ccp:",ccp)
 			console.log("=======================================================")
@@ -150,7 +169,7 @@ async function init(ctx) {
 			previousId = previousId === undefined ? 0 : previousId.id;
 			const user = await ctx.model.Auth.User.create({
 				id: previousId + 1,
-				email:OrgEmail,
+				email:Domain,
 				name:username,
 				password:hash(password),		
 				organization:OrgName,
@@ -292,7 +311,7 @@ async function createAsset(id, type, data, walletId, OrgName) {
 
 	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
-		throw error;
+		return `${error}`;
 	}
 }
 
@@ -338,7 +357,7 @@ async function readAsset(id, walletId, OrgName) {
 
 	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);
-		throw error;
+		return `${error}`;
 	}
 }
 
