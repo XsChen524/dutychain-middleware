@@ -43,9 +43,10 @@ class DocService extends Service {
 		}
 	}
 
-	async find() {
-		const { title, data, vendorId } = body;
-		const txns = await this.ctx.model.Doc.find({ title, data, vendorId });
+	async find(body) {
+		console.log(body);
+		const { id, title, data, vendorId } = body;
+		const txns = await this.ctx.model.Doc.find(body);
 		if (!txns) {
 			return undefined;
 		}
