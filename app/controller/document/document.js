@@ -3,6 +3,12 @@
 const Controller = require("egg").Controller;
 
 class DocumentController extends Controller {
+	/**
+	 * Get all documents from the Hyperledger
+	 * @param {'admin' | number} walletId walletId of type 'admin' | number
+	 * @param {number} organizationId  organizationId of type number. For organization1, the id is 1.
+	 * @return
+	 */
 	async index() {
 		const ctx = this.ctx;
 		const headers = {
@@ -25,9 +31,27 @@ class DocumentController extends Controller {
 			};
 			return;
 		}
+
+		const parsedDocumentArray = await (async (documents) => {
+			const documentArr = [];
+			return new Promise((resolve) => {
+				for (let i = 0; i < documents.length; i += 1) {
+					documentArr.push({
+						key: Number(documents[i].Key),
+						record: {
+							data: documents[i].Record.data,
+							id: Number(documents[i].Record.id),
+							type: documents[i].Record.type,
+						},
+					});
+				}
+				resolve(documentArr);
+			});
+		})(documents);
+
 		ctx.body = {
 			success: true,
-			data: documents,
+			data: parsedDocumentArray,
 		};
 		return;
 	}

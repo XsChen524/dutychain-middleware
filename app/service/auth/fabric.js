@@ -31,7 +31,7 @@ class FabricService extends Service {
 			const ccp = await buildCCPOrg(ccpPath);
 			const wallet = await buildWallet(Wallets, walletPath);
 			const caClient = await buildCAClient(FabricCAServices, ccp, ca);
-			await registerAndEnrollUser(caClient, wallet, orgMSP, walletId, department);
+			await this.ctx.service.fabric.ca.registerAndEnrollUser(caClient, wallet, orgMSP, walletId, department);
 
 			return walletId;
 		} catch (error) {
