@@ -2,7 +2,7 @@
 
 const Service = require("egg").Service;
 const crypto = require("crypto");
-const { randomString } = require("../utils/utils");
+const { randomString } = require("../../utils/utils");
 
 class DocService extends Service {
 	async insert(body) {

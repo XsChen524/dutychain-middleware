@@ -17,8 +17,8 @@ class DocumentService extends Service {
 	 * @param {string} id the primary key in blockchain
 	 * @param {string} type the document type
 	 * @param {string} data the data in blockchain, need stringfying at frontend.
-	 * @param {number} walletId the identity used to add data in blockchain
-	 * @param {string | number} orgId the org used to add data in blockchain
+	 * @param {string} walletId the identity used to add data in blockchain
+	 * @param {string} orgId the org used to add data in blockchain
 	 */
 	async createAsset(id, type, data, walletId, orgId) {
 		const orgMSP = `Org${orgId}MSP`;
@@ -37,6 +37,9 @@ class DocumentService extends Service {
 			const network = await gateway.getNetwork(CHANNEL_NAME);
 			const contract = network.getContract(CHAIN_CODE_NAME);
 			console.log("--> Submit Transaction: CreateAsset");
+			/**
+			 * All arguments in submitTransaction are of type String!
+			 */
 			const result = await contract.submitTransaction("CreateAsset", id, type, data);
 			console.log("*** Result: committed");
 			return JSON.parse(result);
@@ -56,6 +59,7 @@ class DocumentService extends Service {
 	 * @return {object} asset
 	 */
 	async readAsset(id, walletId, orgId) {
+		const decoder = new TextDecoder();
 		const orgMSP = `Org${orgId}MSP`;
 		const ccpPath = path.resolve(`${BASE_DIR}/app/ccp/connection-org${orgId}.json`);
 		const walletPath = path.resolve(`${BASE_DIR}/app/blockchain/wallet/${orgMSP}`);
@@ -72,7 +76,7 @@ class DocumentService extends Service {
 			const network = await gateway.getNetwork(CHANNEL_NAME);
 			const contract = network.getContract(CHAIN_CODE_NAME);
 			const result = await contract.evaluateTransaction("ReadAsset", id);
-			return JSON.parse(result);
+			return JSON.parse(decoder.decode(result));
 		} catch (err) {
 			console.error(err);
 			return undefined;
@@ -82,6 +86,7 @@ class DocumentService extends Service {
 	}
 
 	async readRange(left = "", right = "", walletId, orgId) {
+		const decoder = new TextDecoder();
 		const orgMSP = `Org${orgId}MSP`;
 		const ccpPath = path.resolve(`${BASE_DIR}/app/ccp/connection-org${orgId}.json`);
 		const walletPath = path.resolve(`${BASE_DIR}/app/blockchain/wallet/${orgMSP}`);
@@ -98,7 +103,7 @@ class DocumentService extends Service {
 			const network = await gateway.getNetwork(CHANNEL_NAME);
 			const contract = network.getContract(CHAIN_CODE_NAME);
 			const result = await contract.evaluateTransaction("GetAssetsByRange", left, right);
-			return JSON.parse(result);
+			return JSON.parse(decoder.decode(result));
 		} catch (err) {
 			console.error(err);
 			return undefined;

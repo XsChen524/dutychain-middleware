@@ -8,32 +8,32 @@ module.exports = (app) => {
 	router.get("/", controller.home.index);
 
 	/**
+	 * Initialization
+	 */
+	router.get("/initialize", controller.auth.initialize.index); // To be further test under clean env
+
+	/**
 	 * Auth router group
 	 */
 	router.post("/auth/login", controller.auth.login.login);
-	router.post("/auth/signup", controller.auth.administration.register);
+	router.post("/auth/signup", controller.auth.administration.register); // TBC
 	router.get("/auth/organization", jwt, controller.auth.administration.getAllOrgs);
 	router.get("/admin/:orgName/user", controller.auth.administration.getUsersByOrg);
 
+	/**
+	 * Documents router
+	 */
 	router.get("/document", controller.document.document.index);
+	router.get("/document/:id", controller.document.document.find);
+	router.post("/document", controller.document.document.create);
 
-	// Register
-	router.post("/register", controller.register.register);
-
-	// Used for Debugging
-	router.get("/debug", controller.debug.index);
-	router.post("/debug", controller.debug.index);
+	/*
 	router.get("/debug/readall", controller.debug.readAll);
 	router.post("/debug/readall", controller.debug.readAll);
 	router.get("/debug/read", controller.debug.read);
 	router.post("/debug/read", controller.debug.read);
-	// router.get("/debug/create", controller.debug.create);
 	router.post("/debug/create", controller.debug.create);
 	router.get("/debug/init", controller.debug.init);
 	router.post("/debug/init", controller.debug.init);
-
-	// Documents
-	// body = { title, data, vendorId, walletId, org }
-	// router.get("/document", controller.doc.getDocList);
-	router.post("/document", controller.doc.uploadDoc);
+	*/
 };

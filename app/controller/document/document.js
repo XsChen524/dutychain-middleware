@@ -8,10 +8,9 @@ class DocumentController extends Controller {
 	 */
 	async index() {
 		const ctx = this.ctx;
-		const headers = {
+		ctx.set({
 			"Content-Type": "application/json",
-		};
-		ctx.set(headers);
+		});
 
 		/**
 		 * @param {string} walletId walletId of type 'admin' | number
@@ -34,10 +33,10 @@ class DocumentController extends Controller {
 			return new Promise((resolve) => {
 				for (let i = 0; i < documents.length; i += 1) {
 					documentArr.push({
-						key: Number(documents[i].Key),
+						key: documents[i].Key,
 						record: {
 							data: documents[i].Record.data,
-							id: Number(documents[i].Record.id),
+							id: documents[i].Record.id,
 							type: documents[i].Record.type,
 						},
 					});
@@ -49,6 +48,62 @@ class DocumentController extends Controller {
 		ctx.body = {
 			success: true,
 			data: parsedDocumentArray,
+		};
+		return;
+	}
+
+	/**
+	 * Find a document by documentId
+	 */
+	async find() {
+		const ctx = this.ctx;
+		ctx.set({
+			"Content-Type": "application/json",
+		});
+		const documentId = ctx.params.id;
+		const { walletId, organizationId } = ctx.query;
+
+		const document = await ctx.service.document.fabric.readAsset(documentId, walletId.toString(), organizationId);
+
+		if (!document) {
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
+		}
+		ctx.body = {
+			success: true,
+			data: document,
+		};
+		return;
+	}
+
+	/**
+	 * Create a document
+	 */
+	async create() {
+		const ctx = this.ctx;
+		ctx.set({
+			"Content-Type": "application/json",
+		});
+
+		const id = ctx.request.body.id;
+		const data = JSON.stringify(ctx.request.body.data);
+		const { type, walletId } = ctx.request.body;
+		const orgId = ctx.request.body.org.toString();
+
+		const document = await ctx.service.document.fabric.createAsset(id, type, data, walletId, orgId);
+
+		if (document) {
+			ctx.body = {
+				success: true,
+				data: document,
+			};
+			return;
+		}
+		ctx.body = {
+			success: false,
+			data: undefined,
 		};
 		return;
 	}

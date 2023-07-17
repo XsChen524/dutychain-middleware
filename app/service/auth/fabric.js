@@ -63,7 +63,8 @@ class FabricService extends Service {
 		try {
 			const adminInfoExists = fs.existsSync(ADMIN_INFO_PATH);
 			if (adminInfoExists) {
-				return fs.readFileSync(ADMIN_INFO_PATH, "utf8");
+				const adminInfo = fs.readFileSync(ADMIN_INFO_PATH, "utf8");
+				return JSON.parse(adminInfo);
 			}
 
 			let configContent;
