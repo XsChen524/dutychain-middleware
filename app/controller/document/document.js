@@ -5,9 +5,6 @@ const Controller = require("egg").Controller;
 class DocumentController extends Controller {
 	/**
 	 * Get all documents from the Hyperledger
-	 * @param {'admin' | number} walletId walletId of type 'admin' | number
-	 * @param {number} organizationId  organizationId of type number. For organization1, the id is 1.
-	 * @return
 	 */
 	async index() {
 		const ctx = this.ctx;
@@ -15,14 +12,14 @@ class DocumentController extends Controller {
 			"Content-Type": "application/json",
 		};
 		ctx.set(headers);
+
+		/**
+		 * @param {string} walletId walletId of type 'admin' | number
+		 * @param {number} organizationId  organizationId of type number. For organization1, the id is 1.
+		 */
 		const { walletId, organizationId } = ctx.query;
 
-		const documents = await ctx.service.document.document.findAllDocuments(
-			"",
-			"",
-			walletId.toString(),
-			organizationId
-		);
+		const documents = await ctx.service.document.fabric.readRange("", "", walletId.toString(), organizationId);
 
 		if (!documents) {
 			ctx.body = {
