@@ -88,6 +88,7 @@ class FabricService extends Service {
 				const pubKeyPath = path.resolve(`${BASE_DIR}/app/pubKeys/${pubKeys[i].PUBKEY_PATH}`);
 
 				const pubKey = fs.readFileSync(pubKeyPath, "utf-8");
+				console.log(pubKey);
 
 				const ccp = await this.ctx.service.fabric.app.buildCCPOrg(ccpPath);
 
@@ -99,16 +100,15 @@ class FabricService extends Service {
 
 				const wallet = await this.ctx.service.fabric.app.buildWallet(Wallets, walletPathOrg);
 
-				const hasEnrolledAdmin = await this.ctx.service.fabric.ca.enrollAdmin(caClientOrg, wallet, orgMSP);
-				if (!hasEnrolledAdmin) {
-					throw new Error("Enroll admin failed");
-				}
+				await this.ctx.service.fabric.ca.enrollAdmin(caClientOrg, wallet, orgMSP);
 
 				const encrypted = crypto.publicEncrypt(pubKey, Buffer.from(password, "utf-8"));
 
 				encrypted_passwords[orgId] = encrypted.toString("hex");
 
 				const identity = await wallet.get("admin");
+				console.log(identity);
+
 				const wallethash = hash(JSON.stringify(identity));
 
 				const data = JSON.stringify({
@@ -116,7 +116,7 @@ class FabricService extends Service {
 					walletHash: wallethash,
 				});
 
-				await this.createAsset(i.toString(), "admin", data, "admin", orgId);
+				await this.createAsset(randomString(12), "admin", data, "admin", orgId);
 			}
 
 			fs.writeFileSync(ADMIN_INFO_PATH, JSON.stringify(encrypted_passwords));
@@ -148,6 +148,11 @@ class FabricService extends Service {
 			const caClient = await this.ctx.service.fabric.ca.buildCAClient(FabricCAServices, ccp, ca);
 			await this.ctx.service.fabric.ca.registerAndEnrollUser(caClient, wallet, orgMSP, walletId, department);
 
+			const data = JSON.stringify({
+				description: `Create new user in organization ${organizationId}`,
+			});
+
+			await this.createAsset(randomString(12), "user", data, walletId, organizationId);
 			return walletId;
 		} catch (error) {
 			console.error(error);

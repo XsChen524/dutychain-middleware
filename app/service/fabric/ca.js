@@ -10,48 +10,52 @@ const ADMIN_USER_PASSWORD = "adminpw";
 
 class CaService extends Service {
 	async buildCAClient(FabricCAServices, ccp, caHostName) {
-		// Create a new CA client for interacting with the CA.
-		const caInfo = ccp.certificateAuthorities[caHostName]; // lookup CA details from config
-		const caTLSCACerts = caInfo.tlsCACerts.pem;
-		const caClient = new FabricCAServices(caInfo.url, { trustedRoots: caTLSCACerts, verify: false }, caInfo.caName);
+		try {
+			// Create a new CA client for interacting with the CA.
+			const caInfo = ccp.certificateAuthorities[caHostName]; // lookup CA details from config
+			const caTLSCACerts = caInfo.tlsCACerts.pem;
+			const caClient = new FabricCAServices(
+				caInfo.url,
+				{ trustedRoots: caTLSCACerts, verify: false },
+				caInfo.caName
+			);
 
-		console.log(`Built a CA Client named ${caInfo.caName}`);
-		return caClient;
+			console.log(`Built a CA Client named ${caInfo.caName}`);
+			return caClient;
+		} catch (err) {
+			console.error(err);
+		}
 	}
 
 	async enrollAdmin(caClient, wallet, orgMspId) {
-		return new Promise(async (resolve) => {
-			try {
-				// Check to see if we've already enrolled the admin user.
-				const identity = await wallet.get(ADMIN_USER_ID);
-				if (identity) {
-					console.log("An identity for the admin user already exists in the wallet");
-					return;
-				}
-
-				// Enroll the admin user, and import the new identity into the wallet.
-				const enrollment = await caClient.enroll({
-					enrollmentID: ADMIN_USER_ID,
-					enrollmentSecret: ADMIN_USER_PASSWORD,
-				});
-
-				const x509Identity = {
-					credentials: {
-						certificate: enrollment.certificate,
-						privateKey: enrollment.key.toBytes(),
-					},
-					mspId: orgMspId,
-					type: "X.509",
-				};
-
-				await wallet.put(ADMIN_USER_ID, x509Identity);
-				console.log("Successfully enrolled admin user and imported it into the wallet");
-				resolve(true);
-			} catch (error) {
-				console.error(`Failed to enroll admin user : ${error}`);
-				resolve(false);
+		try {
+			// Check to see if we've already enrolled the admin user.
+			const identity = await wallet.get(ADMIN_USER_ID);
+			if (identity) {
+				console.log("An identity for the admin user already exists in the wallet");
+				return;
 			}
-		});
+
+			// Enroll the admin user, and import the new identity into the wallet.
+			const enrollment = await caClient.enroll({
+				enrollmentID: ADMIN_USER_ID,
+				enrollmentSecret: ADMIN_USER_PASSWORD,
+			});
+
+			const x509Identity = {
+				credentials: {
+					certificate: enrollment.certificate,
+					privateKey: enrollment.key.toBytes(),
+				},
+				mspId: orgMspId,
+				type: "X.509",
+			};
+
+			await wallet.put(ADMIN_USER_ID, x509Identity);
+			console.log("Successfully enrolled admin user and imported it into the wallet");
+		} catch (error) {
+			console.error(`Failed to enroll admin user : ${error}`);
+		}
 	}
 
 	async registerAndEnrollUser(caClient, wallet, orgMspId, userId, affiliation) {
