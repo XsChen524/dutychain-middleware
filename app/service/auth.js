@@ -33,7 +33,7 @@ class AuthService extends Service {
 	async register(body) {
 		const { name, password, email, organization, role, isAdmin, wallet } =
 			body;
-		const hashPassword = await this.ctx.genHash(password);;
+		const hashPassword = await this.ctx.genHash(password);
 		const walletId =
 			wallet || (await this.ctx.service.register.register(organization));
 		let previousId = (
@@ -54,7 +54,7 @@ class AuthService extends Service {
 			if (!user) {
 				return undefined;
 			}
-			await this.ctx.service.debug.create({ type: "usr", id: previousId + 1, data: walletId, walletId: 'admin', org:organization });
+			await this.ctx.service.debug.create({ type: "usr", id: previousId + 1, data: walletId, walletId: 'admin', org: organization });
 			return {
 				id: user.id,
 				name: user.name,

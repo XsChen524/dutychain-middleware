@@ -10,7 +10,7 @@ class DocService extends Service {
 		 * @param {Object} data Get string from request body,
 		 * need stringfying at frontend.
 		 */
-		console.log(body)
+		console.log(body);
 		const { title, data, vendorId, walletId, org } = body;
 		const id = "0x000000000000000000000000000000000000000000000000" + randomString(16);
 		try {
@@ -38,14 +38,14 @@ class DocService extends Service {
 			} catch (error) {
 				console.error(error);
 				console.log("Auto deletion failed, please delete this document manually.");
-			};
+			}
 			return undefined;
 		}
 	}
 
 	async find(body) {
 		console.log(body);
-		const { id, title, data, vendorId } = body;
+		// const { id, title, data, vendorId } = body;
 		const txns = await this.ctx.model.Doc.find(body);
 		if (!txns) {
 			return undefined;
