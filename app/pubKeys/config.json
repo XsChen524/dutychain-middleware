@@ -1,14 +1,10 @@
 [
 	{
-		"NAME": 1,
-		"PUBKEY_PATH": "Org1.pem"
+		"NAME": "A",
+		"PUBKEY_PATH": "OrgA.pem"
 	},
 	{
-		"NAME": 2,
-		"PUBKEY_PATH": "Org2.pem"
-	},
-	{
-		"NAME": 3,
-		"PUBKEY_PATH": "Org3.pem"
+		"NAME": "B",
+		"PUBKEY_PATH": "OrgB.pem"
 	}
 ]

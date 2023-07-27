@@ -57,14 +57,14 @@ class FabricService extends Service {
 
 	/**
 	 * initialize the network
-	 * @return {string} password
+	 * @return {string} encryptedPassword, unencryptedPassword, isFirstCalled
 	 */
 	async initialize() {
 		try {
 			const adminInfoExists = fs.existsSync(ADMIN_INFO_PATH);
 			if (adminInfoExists) {
 				const adminInfo = fs.readFileSync(ADMIN_INFO_PATH, "utf8");
-				return JSON.parse(adminInfo);
+				return [JSON.parse(adminInfo), {} ,false];
 			}
 
 			let configContent;
@@ -75,11 +75,12 @@ class FabricService extends Service {
 				throw new Error("No PubKey Config");
 			}
 
-			const pubKeys = JSON.parse(configContent);
+			const pubKeys = JSON.parse(configContent); 
 			const encrypted_passwords = {};
+			const unencrypted_passwords = {};
 
 			for (let i = 0; i < pubKeys.length; i++) {
-				const orgId = pubKeys[i].NAME;
+				const orgId = pubKeys[i].NAME.toString();
 				const orgMSP = `Org${orgId}MSP`;
 				const password = randomString(8);
 
@@ -105,6 +106,7 @@ class FabricService extends Service {
 				const encrypted = crypto.publicEncrypt(pubKey, Buffer.from(password, "utf-8"));
 
 				encrypted_passwords[orgId] = encrypted.toString("hex");
+				unencrypted_passwords[orgId] = password;
 
 				const identity = await wallet.get("admin");
 				console.log(identity);
@@ -120,7 +122,7 @@ class FabricService extends Service {
 			}
 
 			fs.writeFileSync(ADMIN_INFO_PATH, JSON.stringify(encrypted_passwords));
-			return encrypted_passwords;
+			return [encrypted_passwords,unencrypted_passwords,true];
 		} catch (err) {
 			console.error(err);
 		}

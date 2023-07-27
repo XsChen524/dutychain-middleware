@@ -6,37 +6,26 @@ class InitializeController extends Controller {
 	async index() {
 		const { ctx } = this;
 
-		const result = await this.ctx.service.auth.fabric.initialize();
+		const [result, unencryptedPasswords, isFirstCalled] = await this.ctx.service.auth.fabric.initialize();
+		let success = true;
+		if(isFirstCalled){		
+			for (const [key, value] of Object.entries(unencryptedPasswords)) {
+				const admin = await ctx.service.auth.administration.register({
+					name: "admin"+key,
+					password: value,
+					email: "admin@org"+key+".hk",
+					organization: key,
+					role: "vendor",
+					isAdmin: true,
+					wallet: "admin",
+				});
+ 
+				success = success && !!admin;
+			}
+		}
+		
 
-		const admin1 = await ctx.service.auth.administration.register({
-			name: "admin1",
-			password: "123456",
-			email: "admin@org1.hk",
-			organization: 1,
-			role: "vendor",
-			isAdmin: true,
-			wallet: "admin",
-		});
-		const admin2 = await ctx.service.auth.administration.register({
-			name: "admin2",
-			password: "123456",
-			email: "admin@org2.hk",
-			organization: 2,
-			role: "vendor",
-			isAdmin: true,
-			wallet: "admin",
-		});
-		const admin3 = await ctx.service.auth.administration.register({
-			name: "admin3",
-			password: "123456",
-			email: "admin@org3.hk",
-			organization: 3,
-			role: "vendor",
-			isAdmin: true,
-			wallet: "admin",
-		});
-
-		if (result && admin1 && admin2 && admin3) {
+		if (result && success) {
 			ctx.body = {
 				success: true,
 				data: result,
