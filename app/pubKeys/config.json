@@ -1,10 +1,12 @@
 [
 	{
 		"NAME": "A",
+		"DOMAIN":"orgA.example.com",
 		"PUBKEY_PATH": "OrgA.pem"
 	},
 	{
 		"NAME": "B",
+		"DOMAIN":"orgB.example.com",
 		"PUBKEY_PATH": "OrgB.pem"
 	}
 ]

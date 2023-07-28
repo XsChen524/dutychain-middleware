@@ -81,6 +81,7 @@ class FabricService extends Service {
 
 			for (let i = 0; i < pubKeys.length; i++) {
 				const orgId = pubKeys[i].NAME.toString();
+				const domain = pubKeys[i].DOMAIN;
 				const orgMSP = `Org${orgId}MSP`;
 				const password = randomString(8);
 
@@ -96,7 +97,7 @@ class FabricService extends Service {
 				const caClientOrg = await this.ctx.service.fabric.ca.buildCAClient(
 					FabricCAServices,
 					ccp,
-					`ca.org${orgId}.example.com`
+					`ca.${domain}`
 				);
 
 				const wallet = await this.ctx.service.fabric.app.buildWallet(Wallets, walletPathOrg);
@@ -134,21 +135,39 @@ class FabricService extends Service {
 	 * @return {String} walletId
 	 */
 	async registerInOrganization(organizationId) {
+		let configContent;
+		const pubKeyConfigExists = fs.existsSync(PUB_KEY_CONFIG_PATH);
+		if (pubKeyConfigExists) {
+			configContent = fs.readFileSync(PUB_KEY_CONFIG_PATH, "utf8");
+		} else {
+			throw new Error("No PubKey Config");
+		}
+		const pubKeys = JSON.parse(configContent); 
+
 		// Assign current timestmap to user as its walletId
 		const walletId = Date.now().toString();
 		const orgIdStr = organizationId.toString();
+
+		let domain;
+		for(let i = 0; i < pubKeys.length; i++){
+			if(orgIdStr === pubKeys[i].NAME){
+				domain = pubKeys[i].DOMAIN;
+				break;
+			}
+		}
+
 		try {
 			// Declare namespace and path
 			const orgMSP = `Org${orgIdStr}MSP`;
-			const ca = `ca.org${orgIdStr}.example.com`;
-			const department = `org${orgIdStr}.department1`;
+			const ca = `ca.${domain}`;
+			//const department = `org${orgIdStr}.department1`;
 			const ccpPath = path.resolve(`${BASE_DIR}/app/ccp/connection-org${orgIdStr}.json`);
 			const walletPath = path.resolve(`${BASE_DIR}/app/blockchain/wallet/${orgMSP}`);
 
 			const ccp = await this.ctx.service.fabric.app.buildCCPOrg(ccpPath);
 			const wallet = await this.ctx.service.fabric.app.buildWallet(Wallets, walletPath);
 			const caClient = await this.ctx.service.fabric.ca.buildCAClient(FabricCAServices, ccp, ca);
-			await this.ctx.service.fabric.ca.registerAndEnrollUser(caClient, wallet, orgMSP, walletId, department);
+			await this.ctx.service.fabric.ca.registerAndEnrollUser(caClient, wallet, orgMSP, walletId);
 
 			const data = JSON.stringify({
 				description: `Create new user in organization ${organizationId}`,
