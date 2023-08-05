@@ -64,7 +64,7 @@ class FabricService extends Service {
 			const adminInfoExists = fs.existsSync(ADMIN_INFO_PATH);
 			if (adminInfoExists) {
 				const adminInfo = fs.readFileSync(ADMIN_INFO_PATH, "utf8");
-				return [JSON.parse(adminInfo), {} ,false];
+				return [JSON.parse(adminInfo), {}, false];
 			}
 
 			let configContent;
@@ -75,7 +75,7 @@ class FabricService extends Service {
 				throw new Error("No PubKey Config");
 			}
 
-			const pubKeys = JSON.parse(configContent); 
+			const pubKeys = JSON.parse(configContent);
 			const encrypted_passwords = {};
 			const unencrypted_passwords = {};
 
@@ -123,7 +123,7 @@ class FabricService extends Service {
 			}
 
 			fs.writeFileSync(ADMIN_INFO_PATH, JSON.stringify(encrypted_passwords));
-			return [encrypted_passwords,unencrypted_passwords,true];
+			return [encrypted_passwords, unencrypted_passwords, true];
 		} catch (err) {
 			console.error(err);
 		}
@@ -134,7 +134,7 @@ class FabricService extends Service {
 	 * @param {Number} organizationId organizationID
 	 * @return {String} walletId
 	 */
-	async registerInOrganization(organizationId) {
+	async registerInOrganization(name, organizationId) {
 		let configContent;
 		const pubKeyConfigExists = fs.existsSync(PUB_KEY_CONFIG_PATH);
 		if (pubKeyConfigExists) {
@@ -142,15 +142,15 @@ class FabricService extends Service {
 		} else {
 			throw new Error("No PubKey Config");
 		}
-		const pubKeys = JSON.parse(configContent); 
+		const pubKeys = JSON.parse(configContent);
 
 		// Assign current timestmap to user as its walletId
 		const walletId = Date.now().toString();
 		const orgIdStr = organizationId.toString();
 
 		let domain;
-		for(let i = 0; i < pubKeys.length; i++){
-			if(orgIdStr === pubKeys[i].NAME){
+		for (let i = 0; i < pubKeys.length; i++) {
+			if (orgIdStr === pubKeys[i].NAME) {
 				domain = pubKeys[i].DOMAIN;
 				break;
 			}
@@ -160,7 +160,7 @@ class FabricService extends Service {
 			// Declare namespace and path
 			const orgMSP = `Org${orgIdStr}MSP`;
 			const ca = `ca.${domain}`;
-			//const department = `org${orgIdStr}.department1`;
+			// const department = `org${orgIdStr}.department1`;
 			const ccpPath = path.resolve(`${BASE_DIR}/app/ccp/connection-org${orgIdStr}.json`);
 			const walletPath = path.resolve(`${BASE_DIR}/app/blockchain/wallet/${orgMSP}`);
 
@@ -170,6 +170,7 @@ class FabricService extends Service {
 			await this.ctx.service.fabric.ca.registerAndEnrollUser(caClient, wallet, orgMSP, walletId);
 
 			const data = JSON.stringify({
+				userName: name,
 				description: `Create new user in organization ${organizationId}`,
 			});
 
