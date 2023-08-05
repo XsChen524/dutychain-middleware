@@ -16,7 +16,7 @@ module.exports = (app) => {
 	 * Auth router group
 	 */
 	router.post("/auth/login", controller.auth.login.login);
-	router.post("/auth/signup", controller.auth.administration.register); // TBC
+	router.post("/auth/signup", jwt, controller.auth.administration.register); // TBC
 	router.get("/auth/organization", jwt, controller.auth.administration.getAllOrgs);
 	router.get("/admin/:orgName/user", controller.auth.administration.getUsersByOrg);
 
