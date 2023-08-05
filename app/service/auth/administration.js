@@ -66,7 +66,7 @@ class AdministrationService extends Service {
 	 * @return {object} user object created
 	 */
 	async register(body) {
-		const { name, password, email, organization, role, isAdmin, wallet } = body;
+		const { name, password, email, organization, role, isAdmin } = body;
 
 		const hashPassword = await this.ctx.genHash(password);
 		// const walletId = wallet || (await this.ctx.service.auth.fabric.registerInOrganization(name, organization));

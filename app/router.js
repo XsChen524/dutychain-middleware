@@ -17,8 +17,8 @@ module.exports = (app) => {
 	 */
 	router.post("/auth/login", controller.auth.login.login); // Tested
 	router.post("/auth/signup", jwt, controller.auth.administration.register); // Tested
-	router.get("/auth/organization", jwt, controller.auth.administration.getAllOrgs);
-	router.get("/admin/:orgName/user", controller.auth.administration.getUsersByOrg);
+	// router.get("/auth/organization", jwt, controller.auth.administration.getAllOrgs);
+	router.get("/admin/:orgName/user", controller.auth.administration.getUsersByOrg); // Tested
 
 	/**
 	 * Documents router
