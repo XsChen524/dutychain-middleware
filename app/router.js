@@ -10,23 +10,24 @@ module.exports = (app) => {
 	/**
 	 * Initialization
 	 */
-	router.get("/initialize", controller.auth.initialize.index); // To be further test under clean env
+	router.get("/initialize", controller.auth.initialize.index); // Tested
 
 	/**
 	 * Auth router group
 	 */
-	router.post("/auth/login", controller.auth.login.login);
-	router.post("/auth/signup", jwt, controller.auth.administration.register); // TBC
+	router.post("/auth/login", controller.auth.login.login); // Tested
+	router.post("/auth/signup", jwt, controller.auth.administration.register); // Tested
 	router.get("/auth/organization", jwt, controller.auth.administration.getAllOrgs);
 	router.get("/admin/:orgName/user", controller.auth.administration.getUsersByOrg);
 
 	/**
 	 * Documents router
 	 */
-	router.get("/document", controller.document.document.index);
-	router.get("/document/:id", controller.document.document.find);
-	router.post("/document", jwt, controller.document.document.create);
-	router.get("/validate/:id", controller.document.document.validate);
+	router.get("/index", jwt, controller.document.document.index); // Tested
+	router.get("/document", controller.document.document.find); // Tested
+	router.get("/document/:id", controller.document.document.find); // Tested
+	router.post("/document", jwt, controller.document.document.create); // Tested
+	router.get("/validate/:id", jwt, controller.document.document.validate); // Tested
 
 	/*
 	router.get("/debug/readall", controller.debug.readAll);

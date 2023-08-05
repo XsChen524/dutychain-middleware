@@ -8,17 +8,18 @@ class DocumentController extends Controller {
 	 */
 	async index() {
 		const ctx = this.ctx;
-		ctx.set({
-			"Content-Type": "application/json",
-		});
+		// ctx.set({
+		// 	"Content-Type": "application/json",
+		// });
 
-		/**
-		 * @param {string} walletId walletId of type 'admin' | number
-		 * @param {number} organizationId  organizationId of type number. For organization1, the id is 1.
-		 */
-		const { walletId, organizationId } = ctx.query;
-
-		const documents = await ctx.service.document.fabric.readRange("", "", walletId.toString(), organizationId);
+		// /**
+		//  * @param {string} walletId walletId of type 'admin' | number
+		//  * @param {number} organizationId  organizationId of type number. For organization1, the id is 1.
+		//  */
+		// const { walletId, organizationId } = ctx.query;
+		const vendorId = ctx.state.user.id;
+		const { walletId, organization } = (await ctx.model.Auth.User.find({ id: vendorId }))[0];
+		const documents = await ctx.service.document.fabric.readRange("", "", walletId.toString(), organization);
 
 		if (!documents) {
 			ctx.body = {
@@ -54,6 +55,9 @@ class DocumentController extends Controller {
 
 	async find() {
 		const { ctx } = this;
+		if(ctx.params.id){
+			ctx.request.body.id = ctx.params.id;
+		}
 		const docs = await ctx.service.document.database.find(ctx.request.body);
 		if (docs) {
 			ctx.status = 200;
@@ -77,13 +81,15 @@ class DocumentController extends Controller {
 	 */
 	async validate() {
 		const ctx = this.ctx;
-		ctx.set({
-			"Content-Type": "application/json",
-		});
+		const vendorId = ctx.state.user.id;
+		const { walletId, organization } = (await ctx.model.Auth.User.find({ id: vendorId }))[0];
+		// ctx.set({
+		// 	"Content-Type": "application/json",
+		// });
 		const documentId = ctx.params.id;
-		const { walletId, organizationId } = ctx.query;
+		// const { walletId, organizationId } = ctx.query;
 
-		const document = await ctx.service.document.fabric.readAsset(documentId, walletId.toString(), organizationId);
+		const document = await ctx.service.document.fabric.readAsset(documentId, walletId.toString(), organization);
 
 		if (!document) {
 			ctx.body = {

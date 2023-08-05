@@ -8,6 +8,7 @@ class InitializeController extends Controller {
 
 		const [result, unencryptedPasswords, isFirstCalled] = await this.ctx.service.auth.fabric.initialize();
 		let success = true;
+		console.log("Initialization success.");
 		if (isFirstCalled) {
 			for (const [key, value] of Object.entries(unencryptedPasswords)) {
 				console.log(key, value); // Output default administrator passwords, just for debug!!!

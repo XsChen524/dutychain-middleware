@@ -29,7 +29,7 @@ class DocService extends Service {
 				hash,
 				vendorId,
 			};
-			await this.ctx.service.document.fabric.createAsset({ type: "doc", id, data: requestJson, walletId, org });
+			await this.ctx.service.document.fabric.createAsset(id, "doc", JSON.stringify(requestJson), walletId, org );
 			return txn;
 		} catch (error) {
 			console.error(error);
@@ -44,8 +44,9 @@ class DocService extends Service {
 	}
 
 	async find(body) {
-		const { title, data, vendorId } = body;
-		const txns = await this.ctx.model.Doc.find({ title, data, vendorId });
+		const txns = await this.ctx.model.Doc.find(body);
+		// const txns = await this.ctx.model.Doc.find({ title });
+		console.log(txns);
 		if (!txns) {
 			return undefined;
 		}

@@ -14,7 +14,8 @@ run/
 typings/
 .nyc_output/
 app/blockchain/wallet/
-
 /.github
 config/config.default.js
 app/pubKeys/*.pem
+app/ccp/*.json
+app/blockchain/adminInfo.json

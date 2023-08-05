@@ -44,15 +44,36 @@ class AdministrationController extends Controller {
 	 */
 	async register() {
 		const ctx = this.ctx;
-		const existingUser = await ctx.service.auth.administration.checkUserName(ctx.request.body.name);
-		if (existingUser[0]) {
+		const vendorId = ctx.state.user.id;
+		const vendor = (await ctx.model.Auth.User.find({ id: vendorId }))[0];
+		console.log("Vendor:",vendor);
+		const { isAdmin, organization } = vendor;
+		if (!isAdmin){
 			ctx.body = {
 				success: false,
-				data: undefined,
+				data: "Permission denied!"
 			};
 			return;
 		}
-		const user = await ctx.service.auth.administration.register(ctx.request.body);
+		const existingUser = await ctx.service.auth.administration.checkUserName(ctx.request.body.name);
+		console.log("ExistingUser:",existingUser);
+		if (existingUser[0]) {
+			ctx.body = {
+				success: false,
+				data: "User already exists!",
+			};
+			return;
+		}
+		const param = {
+			name: ctx.request.body.name, 
+			password: ctx.request.body.password, 
+			email: ctx.request.body.email, 
+			organization, 
+			role: ctx.request.body.role, 
+			isAdmin: false
+		};
+		console.log("Register param:",param);
+		const user = await ctx.service.auth.administration.register(param);
 		ctx.body = {
 			success: true,
 			data: user,

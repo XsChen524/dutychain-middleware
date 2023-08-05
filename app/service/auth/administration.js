@@ -69,7 +69,8 @@ class AdministrationService extends Service {
 		const { name, password, email, organization, role, isAdmin, wallet } = body;
 
 		const hashPassword = await this.ctx.genHash(password);
-		const walletId = wallet || (await this.ctx.service.auth.fabric.registerInOrganization(name, organization));
+		// const walletId = wallet || (await this.ctx.service.auth.fabric.registerInOrganization(name, organization));
+		const walletId = await this.ctx.service.auth.fabric.registerInOrganization(name, organization);
 		let previousId = (await this.ctx.model.Auth.User.find().sort({ id: -1 }))[0];
 		previousId = previousId === undefined ? 0 : previousId.id;
 		try {
