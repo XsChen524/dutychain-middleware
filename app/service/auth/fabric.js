@@ -131,6 +131,7 @@ class FabricService extends Service {
 
 	/**
 	 * Register user
+	 * @param {String} name username
 	 * @param {Number} organizationId organizationID
 	 * @return {String} walletId
 	 */
