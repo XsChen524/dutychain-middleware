@@ -52,10 +52,30 @@ class DocumentController extends Controller {
 		return;
 	}
 
-	/**
-	 * Find a document by documentId
-	 */
 	async find() {
+		const { ctx } = this;
+		const docs = await ctx.service.document.database.find(ctx.request.body);
+		if (docs) {
+			ctx.status = 200;
+			ctx.body = {
+				success: true,
+				data: docs,
+			};
+		} else {
+			ctx.status = 400;
+			ctx.body = {
+				success: false,
+				data: undefined,
+			};
+		}
+		// ctx.body = 'document';
+		return;
+	}
+
+	/**
+	 * Find a digest record by documentId
+	 */
+	async validate() {
 		const ctx = this.ctx;
 		ctx.set({
 			"Content-Type": "application/json",
@@ -83,16 +103,21 @@ class DocumentController extends Controller {
 	 */
 	async create() {
 		const ctx = this.ctx;
-		ctx.set({
-			"Content-Type": "application/json",
-		});
+		// ctx.set({
+		// 	"Content-Type": "application/json",
+		// });
 
-		const id = ctx.request.body.id;
-		const data = JSON.stringify(ctx.request.body.data);
-		const { type, walletId } = ctx.request.body;
-		const orgId = ctx.request.body.org.toString();
+		// const id = ctx.request.body.id;
+		// const data = JSON.stringify(ctx.request.body.data);
+		// const { type, walletId } = ctx.request.body;
+		// const orgId = ctx.request.body.org.toString();
 
-		const document = await ctx.service.document.fabric.createAsset(id, type, data, walletId, orgId);
+		// const document = await ctx.service.document.fabric.createAsset(id, type, data, walletId, orgId);
+
+		const vendorId = ctx.state.user.id;
+		const { walletId, organization } = (await ctx.model.Auth.User.find({ id: vendorId }))[0];
+		const { title, data } = ctx.request.body;
+		const document = await ctx.service.document.database.insert({ title, data, vendorId, walletId, org: organization });
 
 		if (document) {
 			ctx.body = {

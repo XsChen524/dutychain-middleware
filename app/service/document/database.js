@@ -29,12 +29,12 @@ class DocService extends Service {
 				hash,
 				vendorId,
 			};
-			await this.ctx.service.debug.create({ type: "doc", id, data: requestJson, walletId, org });
+			await this.ctx.service.document.fabric.createAsset({ type: "doc", id, data: requestJson, walletId, org });
 			return txn;
 		} catch (error) {
 			console.error(error);
 			try {
-				await this.ctx.service.doc.delete(id);
+				await this.delete(id);
 			} catch (error) {
 				console.error(error);
 				console.log("Auto deletion failed, please delete this document manually.");

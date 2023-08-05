@@ -8,22 +8,22 @@ class InitializeController extends Controller {
 
 		const [result, unencryptedPasswords, isFirstCalled] = await this.ctx.service.auth.fabric.initialize();
 		let success = true;
-		if(isFirstCalled){		
+		if (isFirstCalled) {
 			for (const [key, value] of Object.entries(unencryptedPasswords)) {
 				const admin = await ctx.service.auth.administration.register({
-					name: "admin"+key,
+					name: "admin" + key,
 					password: value,
-					email: "admin@org"+key+".hk",
+					email: "admin@org" + key + ".hk",
 					organization: key,
 					role: "vendor",
 					isAdmin: true,
 					wallet: "admin",
 				});
- 
+
 				success = success && !!admin;
 			}
 		}
-		
+
 
 		if (result && success) {
 			ctx.body = {

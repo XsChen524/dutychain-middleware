@@ -25,7 +25,8 @@ module.exports = (app) => {
 	 */
 	router.get("/document", controller.document.document.index);
 	router.get("/document/:id", controller.document.document.find);
-	router.post("/document", controller.document.document.create);
+	router.post("/document", jwt, controller.document.document.create);
+	router.get("/validate/:id", controller.document.document.validate);
 
 	/*
 	router.get("/debug/readall", controller.debug.readAll);
