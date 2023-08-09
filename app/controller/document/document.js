@@ -96,6 +96,7 @@ class DocumentController extends Controller {
 				success: false,
 				data: undefined,
 			};
+			return;
 		}
 		ctx.body = {
 			success: true,
