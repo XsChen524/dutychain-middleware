@@ -55,18 +55,22 @@ class DocumentController extends Controller {
 
 	async find() {
 		const { ctx } = this;
-		if(ctx.params.id){
+		if (ctx.params.id) {
 			ctx.request.body.id = ctx.params.id;
 		}
 		const docs = await ctx.service.document.database.find(ctx.request.body);
+		ctx.status = 200;
 		if (docs) {
-			ctx.status = 200;
 			ctx.body = {
 				success: true,
-				data: docs,
+				data: {
+					id: docs.id,
+					title: docs.title,
+					data: docs.data,
+					vendorId: docs.vendorId,
+				},
 			};
 		} else {
-			ctx.status = 400;
 			ctx.body = {
 				success: false,
 				data: undefined,
