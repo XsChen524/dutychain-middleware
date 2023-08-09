@@ -60,15 +60,17 @@ class DocumentController extends Controller {
 		}
 		const docs = await ctx.service.document.database.find(ctx.request.body);
 		ctx.status = 200;
-		if (docs) {
+		if (docs.length !== 0) {
 			ctx.body = {
 				success: true,
-				data: {
-					id: docs.id,
-					title: docs.title,
-					data: docs.data,
-					vendorId: docs.vendorId,
-				},
+				data: docs.map((value, index) => {
+					return {
+						id: value.id,
+						title: value.title,
+						data: value.data,
+						vendorId: value.vendorId
+					}
+				}),
 			};
 		} else {
 			ctx.body = {
