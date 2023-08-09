@@ -61,6 +61,26 @@ class DocService extends Service {
 		}
 		return txns;
 	}
+
+	async validate(documentId, walletId, organization) {
+		const ctx = this.ctx;
+		let document = await ctx.service.document.fabric.readAsset(documentId, walletId, organization);
+		if(!document) return {
+			success: false,
+			log: "No such digest."
+		};
+		const digest = document.data.hash;
+		document = (await this.ctx.model.Doc.find({id: documentId}))[0];
+		const str = JSON.stringify({ title: document.title, data: document.data, vendorId: document.vendorId });
+		const hash = crypto.createHmac("sha256", "123456").update(str, "utf8").digest("hex");
+		if(digest == hash) return {
+			success: true
+		}
+		else return {
+			success: false,
+			log: "Document is modified"
+		}
+	}
 }
 
 module.exports = DocService;

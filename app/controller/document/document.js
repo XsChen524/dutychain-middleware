@@ -95,18 +95,18 @@ class DocumentController extends Controller {
 		const documentId = ctx.params.id;
 		// const { walletId, organizationId } = ctx.query;
 
-		const document = await ctx.service.document.fabric.readAsset(documentId, walletId.toString(), organization);
+		const document = await ctx.service.document.database.validate(documentId, walletId.toString(), organization);
 
-		if (!document) {
+		if (!document.success) {
 			ctx.body = {
 				success: false,
-				data: undefined,
+				data: document.log,
 			};
 			return;
 		}
 		ctx.body = {
 			success: true,
-			data: document,
+			// data: document,
 		};
 		return;
 	}
